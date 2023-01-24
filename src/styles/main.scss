@@ -1,0 +1,22 @@
+@forward './reset';
+@use './colors' as c;
+
+:root {
+
+  // SETTING COMMON COLOR CUSTOM PROPERTIES
+  @each $color,
+  $value in c.$colors {
+    --c-#{$color}: #{$value};
+  }
+
+  // SETTING ELEVATION LEVEL CUSTOM PROPERTIES
+  @each $level,
+  $value in c.$elevationLeves {
+    --c-elevation-#{$level}: #{$value};
+  }
+}
+
+body {
+  background-color: c.composeLayeredColor("amber-accent-primary", "on-surface-primary", 1);
+  font-family: 'Roboto', sans-serif;
+}
