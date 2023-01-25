@@ -1,0 +1,61 @@
+@use './utils.module' as u;
+
+@function getLineHeight($flag) {
+  @if $flag =="one-liner" {
+    @return 100%;
+  }
+
+  @else {
+    @return $flag;
+  }
+}
+
+// UTILITIES
+$font-face-primary: 'Roboto', sans-serif;
+$font-face-secondary: 'Roboto Condensed', sans-serif;
+
+$font-weights: (
+  "light": 300,
+  "regular": 400,
+  "medium": 500,
+  "semibold": 600,
+  "bold": 700,
+);
+
+$heading-sizes: (
+  "L": u.toRem(40),
+);
+
+$title-sizes: (
+  "M": u.toRem(16),
+);
+
+$base-sizes: (
+  "M": u.toRem(16),
+);
+
+// TEXT STYLES
+@mixin useHeading($size: "L", $weight: "bold", $height: 100%) {
+  font-family: $font-face-secondary;
+  font-size: map-get($heading-sizes, $size);
+  font-weight: map-get($font-weights, $weight);
+  line-height: getLineHeight($height);
+  text-transform: uppercase;
+  font-style: italic;
+}
+
+@mixin useTitle($size: "M", $weight: "semibold", $height: 135%) {
+  font-family: $font-face-secondary;
+  font-size: map-get($title-sizes, $size);
+  font-weight: map-get($font-weights, $weight);
+  line-height: getLineHeight($height);
+  text-transform: uppercase;
+  font-style: italic;
+}
+
+@mixin useBase($size: "M", $weight: "regular", $height: 135%) {
+  font-family: $font-face-primary;
+  font-size: map-get($base-sizes, $size);
+  font-weight: map-get($font-weights, $weight);
+  line-height: getLineHeight($height);
+}

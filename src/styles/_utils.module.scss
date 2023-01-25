@@ -3,7 +3,7 @@
   @return $remValue;
 }
 
-@mixin srOnly {
+@mixin useSROnly {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -13,4 +13,10 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+@mixin useBreakpoint($size) {
+  @media screen and (max-width: #{$size}px) {
+    @content;
+  }
 }

@@ -1,0 +1,35 @@
+$colors: (
+  //ACCENT
+  "primary": #67FF76,
+  "on-primary": #151715,
+  "on-primary-medium": rgba(21, 23, 21, 0.7),
+  "negative": #FF6779,
+  "on-negative": #151715,
+  //SURFACE
+  "background": #20241F,
+  "surface": #1A1D19,
+  //ON SURFACE
+  "on-surface": #ECEEEC,
+  "on-surface-variant": #20241F,
+  "on-surface-medium": rgba(236, 238, 236, 0.6),
+  "on-surface-low": rgba(236, 238, 236, 0.5),
+  //OUTLINE
+  "outline": rgba(236, 238, 236, 0.12)
+);
+
+$elevationLeves: (
+  1: 0.04,
+  2: 0.08,
+);
+
+@function getColor($colorRoleName) {
+  @return map-get($colors, $colorRoleName);
+}
+
+@function getElevationPercentage($number) {
+  @return calc($number * 100%);
+}
+
+@function composeLayeredColor($base, $overlay, $level: 1) {
+  @return mix(getColor($base), getColor($overlay), getElevationPercentage(map-get($map: $elevationLeves, $key: $level)));
+}

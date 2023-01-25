@@ -1,5 +1,6 @@
-@forward './reset';
-@use './colors' as c;
+@forward './reset.module';
+@use './colors.module' as c;
+@use './text.module' as t;
 
 :root {
 
@@ -17,6 +18,7 @@
 }
 
 body {
-  background-color: c.composeLayeredColor("amber-accent-primary", "on-surface-primary", 1);
-  font-family: 'Roboto', sans-serif;
+  background-color: var(--c-background);
+  color: var(--c-on-surface);
+  font-family: t.$font-face-primary;
 }
