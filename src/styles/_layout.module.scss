@@ -1,0 +1,15 @@
+@mixin useSectionContainer($padding: 0 48px) {
+  padding: 0 48px;
+}
+
+@mixin useContentContainer($margin: 0 auto, $maxWidth: 664px) {
+  margin: $margin;
+  max-width: $maxWidth;
+}
+
+@mixin useFlex($direction: column, $justify: flex-start, $align: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}

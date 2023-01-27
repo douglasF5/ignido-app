@@ -44,7 +44,7 @@ $base-sizes: (
   font-style: italic;
 }
 
-@mixin useTitle($size: "M", $weight: "semibold", $height: 135%) {
+@mixin useTitle($size: "M", $weight: "medium", $height: 135%) {
   font-family: $font-face-secondary;
   font-size: map-get($title-sizes, $size);
   font-weight: map-get($font-weights, $weight);

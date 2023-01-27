@@ -1,0 +1,16 @@
+@use '../../styles/layout.module' as l;
+@use '../../styles/text.module' as t;
+
+.container {
+  @include l.useFlex;
+  gap: 2px;
+}
+
+.data {
+  @include t.useHeading;
+  color: var(--c-primary);
+}
+
+.label {
+  @include t.useTitle;
+}

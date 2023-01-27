@@ -1,0 +1,47 @@
+@use './layout.module' as l;
+@use './text.module' as t;
+
+.header {
+  @include l.useSectionContainer;
+  background-color: var(--c-surface);
+  background-image: url('/public/dotted-bg.svg');
+}
+
+.headerContentContainer {
+  @include l.useContentContainer;
+  @include l.useFlex($justify: center, $align: stretch);
+  position: relative;
+  gap: 16px;
+
+  padding: 24px 0;
+  min-height: 231px;
+}
+
+.infoWrapper {
+  @include l.useFlex($direction: row, $justify: space-between);
+}
+
+.logoWrapper {
+  @include l.useFlex($direction: row, $justify: space-between);
+  gap: 2px;
+
+  & h2 {
+    @include t.useHeading;
+  }
+}
+
+.statsWrapper {
+  @include l.useFlex($direction: row);
+  gap: 24px;
+}
+
+.addNewTaskContainer {
+  position: absolute;
+  bottom: -22px;
+  left: 0;
+  right: 0;
+  padding: 12px 16px;
+  background-color: var(--c-primary);
+  color: var(--c-on-primary);
+  border-radius: 4px;
+}
