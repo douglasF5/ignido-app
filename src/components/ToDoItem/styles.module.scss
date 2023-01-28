@@ -1,0 +1,46 @@
+@use '../../styles/layout.module' as l;
+@use '../../styles/text.module' as t;
+
+.container {
+  @include l.useFlex($direction: row, $align: center);
+
+  gap: 12px;
+  padding: 12px 8px 12px 16px;
+  border-bottom: 1px solid var(--c-outline);
+
+  & p::selection {
+    color: var(--c-surface);
+    background-color: var(--c-primary);
+  }
+}
+
+.isHeading {
+  gap: 4px;
+  padding: 24px 8px 12px 0;
+  border-bottom: 1px solid var(--c-primary);
+}
+
+.headingIcon {
+  @include t.useTitle;
+  color: var(--c-on-surface-low);
+}
+
+.headingTitle {
+  @include t.useTitle;
+  color: var(--c-primary);
+}
+
+.boxCheckbox {
+  @include l.useFlex($justify: center, $align: center);
+
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--c-on-surface-low);
+  background-color: transparent;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 1px solid var(--c-primary);
+  }
+}

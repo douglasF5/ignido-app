@@ -44,13 +44,13 @@ $base-sizes: (
   font-style: italic;
 }
 
-@mixin useTitle($size: "M", $weight: "medium", $height: 135%) {
+@mixin useTitle($size: "M", $weight: "medium", $height: 135%, $style: italic, $transform: uppercase) {
   font-family: $font-face-secondary;
   font-size: map-get($title-sizes, $size);
   font-weight: map-get($font-weights, $weight);
   line-height: getLineHeight($height);
-  text-transform: uppercase;
-  font-style: italic;
+  text-transform: $transform;
+  font-style: $style;
 }
 
 @mixin useBase($size: "M", $weight: "regular", $height: 135%) {

@@ -18,8 +18,8 @@ $colors: (
 );
 
 $elevationLeves: (
-  1: 0.04,
-  2: 0.08,
+  1: 0.08,
+  2: 0.16,
 );
 
 @function getColor($colorRoleName) {
@@ -31,5 +31,5 @@ $elevationLeves: (
 }
 
 @function composeLayeredColor($base, $overlay, $level: 1) {
-  @return mix(getColor($base), getColor($overlay), getElevationPercentage(map-get($map: $elevationLeves, $key: $level)));
+  @return mix(getColor($overlay), getColor($base), getElevationPercentage(map-get($map: $elevationLeves, $key: $level)));
 }

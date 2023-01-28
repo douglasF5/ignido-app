@@ -1,5 +1,7 @@
+@use './utils.module' as u;
 @use './layout.module' as l;
 @use './text.module' as t;
+@use './colors.module' as c;
 
 .header {
   @include l.useSectionContainer;
@@ -9,16 +11,11 @@
 
 .headerContentContainer {
   @include l.useContentContainer;
-  @include l.useFlex($justify: center, $align: stretch);
-  position: relative;
+  @include l.useFlex($direction: row, $justify: space-between);
   gap: 16px;
 
   padding: 24px 0;
   min-height: 231px;
-}
-
-.infoWrapper {
-  @include l.useFlex($direction: row, $justify: space-between);
 }
 
 .logoWrapper {
@@ -36,12 +33,74 @@
 }
 
 .addNewTaskContainer {
-  position: absolute;
-  bottom: -22px;
-  left: 0;
-  right: 0;
+  @include l.useFlex($direction: row, $justify: space-between);
+  gap: 12px;
   padding: 12px 16px;
   background-color: var(--c-primary);
   color: var(--c-on-primary);
   border-radius: 4px;
+}
+
+.inputFieldAddtask {
+  border: none;
+  background-color: transparent;
+  flex-grow: 1;
+
+  &::placeholder {
+    color: var(--c-on-primary-medium);
+  }
+
+  &:focus-visible {
+    outline: 1px solid var(--c-primary);
+  }
+
+  &::selection {
+    color: var(--c-primary);
+    background-color: var(--c-surface);
+  }
+}
+
+.buttonAddTask {
+  @include t.useTitle($style: normal);
+
+  padding: u.toRem(8) u.toRem(16);
+  border: none;
+  border-radius: 4px;
+  background-color: var(--c-surface);
+  color: var(--c-primary);
+  cursor: pointer;
+  box-shadow: 0px 5px 4px rgba(c.getColor('background'), 0.32);
+  transition-property: background-color, box-shadow;
+  transition-duration: 100ms;
+  transition-timing-function: ease;
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: c.composeLayeredColor("surface", "primary", 2);
+    }
+  }
+
+  &:active {
+    box-shadow: 0px 0px 4px rgba(c.getColor('background'), 0.32);
+  }
+
+  &:focus-visible {
+    outline: 1px solid var(--c-primary);
+  }
+}
+
+.pageMainHeading {
+  @include u.useSROnly;
+}
+
+.mainContentWrapper {
+  @include l.useFlex($align: stretch);
+  @include l.useContentContainer;
+  gap: 24px;
+  padding: 0 0 24px 0;
+  transform: translateY(-32px);
+}
+
+.tasksListWrapper {
+  border-top: 1px solid var(--c-outline);
 }

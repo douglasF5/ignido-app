@@ -10,6 +10,7 @@
     "gc": "node ./src/component-gen/index.js $1"
   },
   "dependencies": {
+    "@radix-ui/react-checkbox": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
