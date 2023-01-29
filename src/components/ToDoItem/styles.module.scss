@@ -6,10 +6,10 @@
   @include l.useFlex($direction: row, $align: center);
 
   gap: 12px;
-  padding: 12px 8px 12px 16px;
+  padding-left: 12px;
   border-bottom: 1px solid var(--c-outline);
 
-  & :is(p, span)::selection {
+  & ::selection {
     color: var(--c-surface);
     background-color: var(--c-primary);
   }
@@ -21,7 +21,10 @@
   }
 
   &.isFocused {
-    opacity: 1 !important;
+    position: relative;
+    background-color: var(--c-background);
+    opacity: 1;
+    z-index: 3;
   }
 }
 
@@ -38,12 +41,23 @@
 
 .taskTitle {
   flex-grow: 1;
+  padding: 16px 0 16px 0;
+
+  &:empty::before {
+    content: 'Untitled task';
+    color: var(--c-on-surface-low);
+  }
 }
 
 .headingTitle {
   @include t.useTitle;
   color: var(--c-primary);
   flex-grow: 1;
+
+  &:empty::before {
+    content: 'Untitled heading';
+    color: var(--c-on-surface-low);
+  }
 }
 
 .boxCheckbox {
@@ -52,7 +66,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 1px solid var(--c-on-surface-low);
+  border: 1px solid var(--c-primary);
   background-color: transparent;
   cursor: pointer;
 

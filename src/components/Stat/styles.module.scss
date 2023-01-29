@@ -3,6 +3,7 @@
 
 .container {
   @include l.useFlex;
+  padding: 12px;
   gap: 2px;
 }
 

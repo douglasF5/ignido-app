@@ -19,6 +19,7 @@ function App() {
     isConfettiRunning,
     addNewToDoItem
   } = useToDoContent();
+
   const [inputContent, setInputContent] = useState('');
   const [focusedItem, setFocusedItem] = useState<string | null>(null);
   const customMessage = {
@@ -69,6 +70,13 @@ function App() {
           <div className={s.statsWrapper}>
             <Stat label='Done' data={completeTasks} />
             <Stat label='Tasks' data={totalTasksCount} />
+            <a className={s.profileContainer} href="https://github.com/douglasF5" title="@douglasF5 on GitHub" target="_blank" rel="noreferrer">
+              <img className={s.profilePic} src="/douglas-ferreira-profile-pic.png" alt="@douglasF5" />
+              <div className={s.profileLabelWrapper}>
+                <h3 className={s.profileLabel}>Me</h3>
+                <img src="/arrow-outward.svg" alt="@douglasF5" />
+              </div>
+            </a>
           </div>
         </div>
       </header>
@@ -84,6 +92,7 @@ function App() {
               onChange={(e) => setInputContent(e.target.value)}
             />
             <button
+              disabled={inputContent === ''}
               className={s.buttonAddTask}
               type="submit"
             >
