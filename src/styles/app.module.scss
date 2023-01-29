@@ -16,7 +16,7 @@
 .header {
   @include l.useSectionContainer;
   background-color: var(--c-surface);
-  background-image: url('/public/dotted-bg.svg');
+  background-image: url('/dotted-bg.svg');
   background-attachment: fixed;
 
   & ::selection {
@@ -87,6 +87,7 @@
 }
 
 .inputFieldAddtask {
+  @include t.useBase($size: "L");
   padding: 16px 16px;
   border: none;
   background-color: transparent;
@@ -173,4 +174,15 @@
   right: 0;
   bottom: 0;
   background-color: rgba(c.getColor('background'), 0.64);
+  animation: overLayFadeIn 150ms ease;
+}
+
+@keyframes overLayFadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }

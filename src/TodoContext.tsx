@@ -26,9 +26,14 @@ interface ToDoContextProvider {
   totalTasksCount: number;
   isConfettiRunning: boolean;
   areAllTasksCompleted: boolean;
+  focusedItem: string | null;
   toggleToDoCheck: (id: string) => void;
   confettiCleanUp: () => void;
   addNewToDoItem: (data: ToDoItemRawData) => void;
+  focusToDoItem: (id: string) => void;
+  blurToDoItem: () => void;
+  duplicateToDoItem: (id: string) => void;
+  deleteToDoItem: (id: string) => void;
 }
 
 // TO DOS INITIAL DATA
@@ -69,6 +74,7 @@ export const ToDoContext = createContext({} as ToDoContextProvider);
 // CONTEXT PROVIDING
 export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
   const [toDoItemsList, setToDoItemsList] = useState(toDoItemsData);
+  const [focusedItem, setFocusedItem] = useState<string | null>(null);
   const [isConfettiRunning, setIsConfettiRunning] = useState(false);
   const completeTasks = toDoItemsList.reduce((count, task) => {
     if (task.isChecked) count++;
@@ -82,8 +88,16 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
 
   const areAllTasksCompleted = totalTasksCount === completeTasks && [totalTasksCount, completeTasks].every(variable => variable > 0);
 
+  function focusToDoItem(id: string) {
+    setFocusedItem(id);
+  }
+
+  function blurToDoItem() {
+    setFocusedItem(null);
+  }
+
   function toggleToDoCheck(id: string) {
-    const newTodosList = toDoItemsList.map(item => {
+    const newToDosList = toDoItemsList.map(item => {
       if (item.id === id) {
         return {
           ...item,
@@ -94,7 +108,7 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
       }
     });
 
-    setToDoItemsList(newTodosList);
+    setToDoItemsList(newToDosList);
   }
 
   function addNewToDoItem({ title }: ToDoItemRawData) {
@@ -103,14 +117,38 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
     const newToDoItem = {
       id: generateQuickId(),
       type: isHeading ? "heading" : "task" as ToDoType,
-      title: isHeading ? title.slice(1) : title,
+      title: isHeading ? title.slice(1).trim() : title.trim(),
       isChecked: false,
       actions: null
     };
 
-    const newTodosList = [...toDoItemsList, newToDoItem];
+    const newToDosList = [...toDoItemsList, newToDoItem];
+    setToDoItemsList(newToDosList);
+  }
 
-    setToDoItemsList(newTodosList);
+  function duplicateToDoItem(id: string) {
+    const toDoIndex = toDoItemsList.findIndex(toDo => toDo.id === id);
+    const elementsBefore = toDoIndex > 0 ? toDoItemsList.slice(0, toDoIndex + 1) : [toDoItemsList[toDoIndex]];
+    const elementsAfter = toDoIndex < toDoItemsList.length - 1 ? toDoItemsList.slice(toDoIndex + 1, toDoItemsList.length) : [];
+
+    const newToDoItem = {
+      ...toDoItemsList[toDoIndex],
+      id: generateQuickId()
+    };
+
+    const newToDosList = [
+      ...elementsBefore,
+      newToDoItem,
+      ...elementsAfter
+    ];
+
+    setToDoItemsList(newToDosList);
+  }
+
+  function deleteToDoItem(id: string) {
+    const newToDosList = toDoItemsList.filter(toDo => toDo.id !== id);
+    setToDoItemsList(newToDosList);
+
   }
 
   function confettiCleanUp() {
@@ -130,9 +168,14 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
       totalTasksCount,
       isConfettiRunning,
       areAllTasksCompleted,
+      focusedItem,
       toggleToDoCheck,
       confettiCleanUp,
-      addNewToDoItem
+      addNewToDoItem,
+      focusToDoItem,
+      blurToDoItem,
+      duplicateToDoItem,
+      deleteToDoItem
     }}>
       {children}
     </ToDoContext.Provider>

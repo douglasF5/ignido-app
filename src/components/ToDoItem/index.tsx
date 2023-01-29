@@ -2,6 +2,7 @@ import s from './styles.module.scss';
 import { composeClassNames } from '../../utils';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { useToDoContent } from '../../TodoContext';
+import { ActionsBar } from '../ActionsBar';
 
 interface ToDoItemProps {
   data: {
@@ -37,12 +38,22 @@ export function ToDoItem({ data, handleClick, isFocused }: ToDoItemProps) {
             </Checkbox.Root>
           </div>
           <p className={s.taskTitle} onClick={handleClick}>{data.title}</p>
+          {isFocused && (
+            <div className={s.actionsBarWrapper}>
+              <ActionsBar itemId={data.id} />
+            </div>
+          )}
         </div>
       )
       : (
-        <div className={headingStyles} onClick={handleClick}>
+        <div className={headingStyles}>
           <span className={s.headingIcon}>#</span>
-          <p className={s.headingTitle}>{data.title}</p>
+          <p className={s.headingTitle} onClick={handleClick}>{data.title}</p>
+          {isFocused && (
+            <div className={s.actionsBarWrapper}>
+              <ActionsBar itemId={data.id} />
+            </div>
+          )}
         </div>
       )
   );

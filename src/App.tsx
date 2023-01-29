@@ -17,11 +17,13 @@ function App() {
     areAllTasksCompleted,
     confettiCleanUp,
     isConfettiRunning,
-    addNewToDoItem
+    focusedItem,
+    addNewToDoItem,
+    focusToDoItem
   } = useToDoContent();
 
   const [inputContent, setInputContent] = useState('');
-  const [focusedItem, setFocusedItem] = useState<string | null>(null);
+
   const customMessage = {
     logoFace: areAllTasksCompleted ? 'coffee' : 'bolt',
     text: areAllTasksCompleted ? 'You did it!' : 'Ignido'
@@ -31,14 +33,6 @@ function App() {
     s.tasksListWrapper,
     focusedItem !== null ? s.hasFocusWithin : null
   ]);
-
-  function handleFocusedItem(id: string) {
-    if (id !== focusedItem) {
-      setFocusedItem(id);
-    } else {
-      setFocusedItem(null);
-    }
-  }
 
   function handleSubmit(e: FormEvent<EventTarget>) {
     e.preventDefault();
@@ -107,7 +101,7 @@ function App() {
                   data={item}
                   key={item.id}
                   isFocused={focusedItem === item.id}
-                  handleClick={() => handleFocusedItem(item.id)}
+                  handleClick={() => focusToDoItem(item.id)}
                 />
               ))
             }

@@ -5,6 +5,7 @@
 .container {
   @include l.useFlex($direction: row, $align: center);
 
+  position: relative;
   gap: 12px;
   padding-left: 12px;
   border-bottom: 1px solid var(--c-outline);
@@ -105,4 +106,24 @@
 
 .boxCheckbox[data-state='checked'] .checkBoxIndicator {
   animation: fadeIn 200ms ease-out;
+}
+
+.actionsBarWrapper {
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translateY(-105%);
+  animation: actionsBarFadeIn 100ms ease-in;
+}
+
+@keyframes actionsBarFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-98%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(-105%);
+  }
 }

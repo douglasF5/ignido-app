@@ -1,0 +1,36 @@
+@use '../../styles/text.module' as t;
+@use '../../styles/layout.module' as l;
+@use '../../styles/colors.module' as c;
+
+.container {
+  @include l.useFlex($direction: row, $align: center);
+  border: 1px solid var(--c-outline);
+  border-radius: 4px;
+  background-color: c.composeLayeredColor("surface", "on-surface", 2);
+}
+
+.actionContainer {
+  @include l.useFlex($direction: row, $align: center);
+  gap: 2px;
+  padding: 4px 8px 4px 6px;
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 100ms ease;
+
+  &:not(:last-child) {
+    border-right: 1px solid var(--c-outline);
+  }
+
+  @media (hover: hover) {
+    &:not([disabled]):hover {
+      background-color: rgba(c.getColor("on-surface"), 0.08);
+    }
+  }
+
+  & span {
+    @include t.useTitle($size: "S", $style: normal);
+    color: var(--c-on-surface);
+  }
+}
