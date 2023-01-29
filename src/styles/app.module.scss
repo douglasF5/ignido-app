@@ -3,10 +3,19 @@
 @use './text.module' as t;
 @use './colors.module' as c;
 
+.confettiWrapper {
+  position: fixed;
+  transform: translate(-20px);
+  left: 0;
+  right: 0;
+  pointer-events: none;
+}
+
 .header {
   @include l.useSectionContainer;
   background-color: var(--c-surface);
   background-image: url('/public/dotted-bg.svg');
+  background-attachment: fixed;
 }
 
 .headerContentContainer {
@@ -103,4 +112,8 @@
 
 .tasksListWrapper {
   border-top: 1px solid var(--c-outline);
+}
+
+.tasksListWrapper.hasFocusWithin>*:not(.isFocused) {
+  opacity: 0.5;
 }

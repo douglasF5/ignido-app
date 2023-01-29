@@ -19,6 +19,10 @@
     text-decoration: line-through;
     font-style: italic;
   }
+
+  &.isFocused {
+    opacity: 1 !important;
+  }
 }
 
 .isHeading {
@@ -32,9 +36,14 @@
   color: var(--c-on-surface-low);
 }
 
+.taskTitle {
+  flex-grow: 1;
+}
+
 .headingTitle {
   @include t.useTitle;
   color: var(--c-primary);
+  flex-grow: 1;
 }
 
 .boxCheckbox {

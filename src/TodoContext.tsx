@@ -1,12 +1,19 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { generateQuickId } from './utils';
 
 // TYPE ANNOTATION
+type ToDoType = "task" | "heading";
+
 interface ToDoItemData {
   id: string;
-  type: "task" | "heading";
+  type: ToDoType;
   title: string;
   isChecked: boolean | null;
   actions: string[] | null;
+}
+
+interface ToDoItemRawData {
+  title: string;
 }
 
 interface ToDoContextProviderProps {
@@ -21,6 +28,7 @@ interface ToDoContextProvider {
   areAllTasksCompleted: boolean;
   toggleToDoCheck: (id: string) => void;
   confettiCleanUp: () => void;
+  addNewToDoItem: (data: ToDoItemRawData) => void;
 }
 
 // TO DOS INITIAL DATA
@@ -89,6 +97,22 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
     setToDoItemsList(newTodosList);
   }
 
+  function addNewToDoItem({ title }: ToDoItemRawData) {
+    const isHeading = title[0] === "#";
+
+    const newToDoItem = {
+      id: generateQuickId(),
+      type: isHeading ? "heading" : "task" as ToDoType,
+      title: isHeading ? title.slice(1) : title,
+      isChecked: false,
+      actions: null
+    };
+
+    const newTodosList = [...toDoItemsList, newToDoItem];
+
+    setToDoItemsList(newTodosList);
+  }
+
   function confettiCleanUp() {
     setIsConfettiRunning(false);
   }
@@ -107,7 +131,8 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
       isConfettiRunning,
       areAllTasksCompleted,
       toggleToDoCheck,
-      confettiCleanUp
+      confettiCleanUp,
+      addNewToDoItem
     }}>
       {children}
     </ToDoContext.Provider>

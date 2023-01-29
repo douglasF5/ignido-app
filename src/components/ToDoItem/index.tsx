@@ -11,13 +11,17 @@ interface ToDoItemProps {
     isChecked: boolean | null;
     actions: string[] | null;
   };
+  isFocused: boolean;
+  handleClick: () => void;
 }
 
-export function ToDoItem({ data }: ToDoItemProps) {
+export function ToDoItem({ data, handleClick, isFocused }: ToDoItemProps) {
   const { toggleToDoCheck } = useToDoContent();
-  const headingStyles = composeClassNames([s.container, s.isHeading]);
+  const focusStyle = isFocused ? s.isFocused : null;
+  const headingStyles = composeClassNames([s.container, s.isHeading, focusStyle]);
   const taskStyles = composeClassNames([
     s.container,
+    focusStyle,
     data.isChecked ? s.isChecked : null
   ]);
 
@@ -26,17 +30,17 @@ export function ToDoItem({ data }: ToDoItemProps) {
       ? (
         <div className={taskStyles}>
           <div>
-            <Checkbox.Root className={s.boxCheckbox} checked={data.isChecked as boolean} onCheckedChange={() => toggleToDoCheck(data.id)}>
+            <Checkbox.Root id={data.id} className={s.boxCheckbox} checked={data.isChecked as boolean} onCheckedChange={() => toggleToDoCheck(data.id)}>
               <Checkbox.Indicator className={s.checkBoxIndicator}>
                 <img src="/check.svg" alt="Check" />
               </Checkbox.Indicator>
             </Checkbox.Root>
           </div>
-          <p>{data.title}</p>
+          <p className={s.taskTitle} onClick={handleClick}>{data.title}</p>
         </div>
       )
       : (
-        <div className={headingStyles}>
+        <div className={headingStyles} onClick={handleClick}>
           <span className={s.headingIcon}>#</span>
           <p className={s.headingTitle}>{data.title}</p>
         </div>

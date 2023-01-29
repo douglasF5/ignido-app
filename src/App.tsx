@@ -1,4 +1,6 @@
 import { useToDoContent } from './TodoContext';
+import { useState, FormEvent } from 'react';
+import { composeClassNames } from './utils';
 import Confetti from 'react-confetti';
 import './styles/main.scss';
 import s from './styles/app.module.scss';
@@ -8,27 +10,55 @@ import { ToDoItem } from './components/ToDoItem';
 import { EmptyState } from './components/EmptyState';
 
 function App() {
-  const { toDoItemsList, totalTasksCount, completeTasks, areAllTasksCompleted, confettiCleanUp, isConfettiRunning } = useToDoContent();
+  const {
+    toDoItemsList,
+    totalTasksCount,
+    completeTasks,
+    areAllTasksCompleted,
+    confettiCleanUp,
+    isConfettiRunning,
+    addNewToDoItem
+  } = useToDoContent();
+  const [inputContent, setInputContent] = useState('');
+  const [focusedItem, setFocusedItem] = useState<string | null>(null);
   const customMessage = {
     logoFace: areAllTasksCompleted ? 'coffee' : 'bolt',
     text: areAllTasksCompleted ? 'You did it!' : 'Ignido'
   };
 
+  const toDoItemsContainerStyles = composeClassNames([
+    s.tasksListWrapper,
+    focusedItem !== null ? s.hasFocusWithin : null
+  ]);
+
+  function handleFocusedItem(id: string) {
+    if (id !== focusedItem) {
+      setFocusedItem(id);
+    } else {
+      setFocusedItem(null);
+    }
+  }
+
+  function handleSubmit(e: FormEvent<EventTarget>) {
+    e.preventDefault();
+    addNewToDoItem({ title: inputContent });
+    setInputContent('');
+  }
+
   return (
     <div>
       {isConfettiRunning && (
-        <Confetti
-          style={{
-            transform: "translate(-20px)"
-          }}
-          tweenDuration={2000}
-          initialVelocityY={5}
-          gravity={0.1}
-          colors={["#67FF76", "#135319", "#F0FFF1"]}
-          recycle={false}
-          numberOfPieces={100}
-          onConfettiComplete={() => confettiCleanUp()}
-        />
+        <div className={s.confettiWrapper}>
+          <Confetti
+            tweenDuration={2000}
+            initialVelocityY={5}
+            gravity={0.1}
+            colors={["#67FF76", "#135319", "#F0FFF1"]}
+            recycle={false}
+            numberOfPieces={100}
+            onConfettiComplete={() => confettiCleanUp()}
+          />
+        </div>
       )}
       <header className={s.header}>
         <div className={s.headerContentContainer}>
@@ -45,15 +75,31 @@ function App() {
       <main>
         <h1 className={s.pageMainHeading}>Ignido - to-do app</h1>
         <div className={s.mainContentWrapper}>
-          <div className={s.addNewTaskContainer}>
-            <input className={s.inputFieldAddtask} type="text" placeholder='Add new task...' />
-            <button className={s.buttonAddTask}>Add</button>
-          </div>
-          <div className={s.tasksListWrapper}>
+          <form className={s.addNewTaskContainer} onSubmit={handleSubmit}>
+            <input
+              className={s.inputFieldAddtask}
+              type="text"
+              placeholder='Add new task...'
+              value={inputContent}
+              onChange={(e) => setInputContent(e.target.value)}
+            />
+            <button
+              className={s.buttonAddTask}
+              type="submit"
+            >
+              Add
+            </button>
+          </form>
+          <div className={toDoItemsContainerStyles}>
             {toDoItemsList.length === 0
               ? <EmptyState />
               : toDoItemsList.map((item) => (
-                <ToDoItem data={item} key={item.id} />
+                <ToDoItem
+                  data={item}
+                  key={item.id}
+                  isFocused={focusedItem === item.id}
+                  handleClick={() => handleFocusedItem(item.id)}
+                />
               ))
             }
           </div>
