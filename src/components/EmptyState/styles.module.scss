@@ -1,0 +1,14 @@
+@use '../../styles/layout.module' as l;
+@use '../../styles/text.module' as t;
+
+.container {
+  @include l.useFlex($align: center, $justify: center);
+  min-height: 250px;
+  padding: 16px;
+  gap: 8px;
+
+  & p {
+    @include t.useTitle;
+    color: var(--c-on-surface-low);
+  }
+}

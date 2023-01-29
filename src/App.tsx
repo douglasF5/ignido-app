@@ -1,45 +1,44 @@
+import { useToDoContent } from './TodoContext';
+import Confetti from 'react-confetti';
 import './styles/main.scss';
 import s from './styles/app.module.scss';
 import { Stat } from './components/Stat';
 import { LogoFace } from './components/LogoFace';
 import { ToDoItem } from './components/ToDoItem';
-
-interface ToDoItemData {
-  type: "task" | "heading";
-  title: string;
-}
+import { EmptyState } from './components/EmptyState';
 
 function App() {
-  const tasksList: ToDoItemData[] = [
-    {
-      type: "task",
-      title: "Walk the dog"
-    },
-    {
-      type: "task",
-      title: "Dinner with mom"
-    },
-    {
-      type: "heading",
-      title: "This is a heading"
-    },
-    {
-      type: "task",
-      title: "Integer urna interdum massa libero auctor neque turpis turpis semper. Duis vel sed fames integer. This is the content."
-    },
-  ];
+  const { toDoItemsList, totalTasksCount, completeTasks, areAllTasksCompleted, confettiCleanUp, isConfettiRunning } = useToDoContent();
+  const customMessage = {
+    logoFace: areAllTasksCompleted ? 'coffee' : 'bolt',
+    text: areAllTasksCompleted ? 'You did it!' : 'Ignido'
+  };
 
   return (
     <div>
+      {isConfettiRunning && (
+        <Confetti
+          style={{
+            transform: "translate(-20px)"
+          }}
+          tweenDuration={2000}
+          initialVelocityY={5}
+          gravity={0.1}
+          colors={["#67FF76", "#135319", "#F0FFF1"]}
+          recycle={false}
+          numberOfPieces={100}
+          onConfettiComplete={() => confettiCleanUp()}
+        />
+      )}
       <header className={s.header}>
         <div className={s.headerContentContainer}>
           <div className={s.logoWrapper}>
-            <LogoFace faceName='bolt' />
-            <h2>Ignido</h2>
+            <LogoFace faceName={customMessage.logoFace} />
+            <h2>{customMessage.text}</h2>
           </div>
           <div className={s.statsWrapper}>
-            <Stat label='Done' data={1} />
-            <Stat label='Tasks' data={4} />
+            <Stat label='Done' data={completeTasks} />
+            <Stat label='Tasks' data={totalTasksCount} />
           </div>
         </div>
       </header>
@@ -51,9 +50,12 @@ function App() {
             <button className={s.buttonAddTask}>Add</button>
           </div>
           <div className={s.tasksListWrapper}>
-            {tasksList.map(({ title, type }, idx) => (
-              <ToDoItem data={{ type, title }} key={idx} />
-            ))}
+            {toDoItemsList.length === 0
+              ? <EmptyState />
+              : toDoItemsList.map((item) => (
+                <ToDoItem data={item} key={item.id} />
+              ))
+            }
           </div>
         </div>
       </main>

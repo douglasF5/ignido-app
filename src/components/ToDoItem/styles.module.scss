@@ -1,5 +1,6 @@
 @use '../../styles/layout.module' as l;
 @use '../../styles/text.module' as t;
+@use '../../styles/colors.module' as c;
 
 .container {
   @include l.useFlex($direction: row, $align: center);
@@ -8,9 +9,15 @@
   padding: 12px 8px 12px 16px;
   border-bottom: 1px solid var(--c-outline);
 
-  & p::selection {
+  & :is(p, span)::selection {
     color: var(--c-surface);
     background-color: var(--c-primary);
+  }
+
+  &.isChecked {
+    color: var(--c-on-surface-medium);
+    text-decoration: line-through;
+    font-style: italic;
   }
 }
 
@@ -43,4 +50,36 @@
   &:focus-visible {
     outline: 1px solid var(--c-primary);
   }
+
+  &:active {
+    transform: scale(97%);
+  }
+
+  .isChecked & {
+    border: 1px solid var(--c-primary);
+    background-color: var(--c-primary);
+  }
+
+  @media (hover: hover) {
+    .isChecked &:hover {
+      border: c.composeLayeredColor("primary", "on-primary", 1);
+      background-color: c.composeLayeredColor("primary", "on-primary", 1);
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.boxCheckbox[data-state='checked'] .checkBoxIndicator {
+  animation: fadeIn 200ms ease-out;
 }
