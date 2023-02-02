@@ -1,13 +1,14 @@
 import { useToDoContent } from './TodoContext';
+import { Reorder } from "framer-motion";
 import { useState, FormEvent } from 'react';
-import { composeClassNames } from './utils';
-import Confetti from 'react-confetti';
 import './styles/main.scss';
 import s from './styles/app.module.scss';
+import Confetti from 'react-confetti';
 import { Stat } from './components/Stat';
 import { LogoFace } from './components/LogoFace';
 import { ToDoItem } from './components/ToDoItem';
 import { EmptyState } from './components/EmptyState';
+import { ConditionalRender } from './components/ConditionalRender';
 
 function App() {
   const {
@@ -15,24 +16,19 @@ function App() {
     totalTasksCount,
     completeTasks,
     areAllTasksCompleted,
-    confettiCleanUp,
     isConfettiRunning,
     focusedItem,
+    confettiCleanUp,
     addNewToDoItem,
-    focusToDoItem
+    focusToDoItem,
+    updateToDoItemsList
   } = useToDoContent();
-
   const [inputContent, setInputContent] = useState('');
 
   const customMessage = {
     logoFace: areAllTasksCompleted ? 'coffee' : 'bolt',
     text: areAllTasksCompleted ? 'You did it!' : 'Ignido'
   };
-
-  const toDoItemsContainerStyles = composeClassNames([
-    s.tasksListWrapper,
-    focusedItem !== null ? s.hasFocusWithin : null
-  ]);
 
   function handleSubmit(e: FormEvent<EventTarget>) {
     e.preventDefault();
@@ -42,19 +38,21 @@ function App() {
 
   return (
     <div>
-      {isConfettiRunning && (
-        <div className={s.confettiWrapper}>
-          <Confetti
-            tweenDuration={2000}
-            initialVelocityY={5}
-            gravity={0.1}
-            colors={["#67FF76", "#135319", "#F0FFF1"]}
-            recycle={false}
-            numberOfPieces={100}
-            onConfettiComplete={() => confettiCleanUp()}
-          />
-        </div>
-      )}
+      <ConditionalRender.Provider condition={isConfettiRunning}>
+        <ConditionalRender.Slot>
+          <div className={s.confettiWrapper}>
+            <Confetti
+              tweenDuration={2000}
+              initialVelocityY={5}
+              gravity={0.1}
+              colors={["#67FF76", "#135319", "#F0FFF1"]}
+              recycle={false}
+              numberOfPieces={100}
+              onConfettiComplete={() => confettiCleanUp()}
+            />
+          </div>
+        </ConditionalRender.Slot>
+      </ConditionalRender.Provider>
       <header className={s.header}>
         <div className={s.headerContentContainer}>
           <div className={s.logoWrapper}>
@@ -74,7 +72,7 @@ function App() {
           </div>
         </div>
       </header>
-      <main>
+      <main className={s.mainWrapper}>
         <h1 className={s.pageMainHeading}>Ignido - to-do app</h1>
         <div className={s.mainContentWrapper}>
           <form className={s.addNewTaskContainer} onSubmit={handleSubmit}>
@@ -93,19 +91,32 @@ function App() {
               Add
             </button>
           </form>
-          <div className={toDoItemsContainerStyles}>
-            {toDoItemsList.length === 0
-              ? <EmptyState />
-              : toDoItemsList.map((item) => (
-                <ToDoItem
-                  data={item}
-                  key={item.id}
-                  isFocused={focusedItem === item.id}
-                  handleClick={() => focusToDoItem(item.id)}
-                />
-              ))
-            }
-          </div>
+          <ConditionalRender.Provider condition={toDoItemsList.length > 0}>
+            <ConditionalRender.Slot>
+              <div
+                className={s.tasksListWrapper}
+                data-variant-state={focusedItem ? "focusWithin" : "default"}
+              >
+                <Reorder.Group axis="y" values={toDoItemsList} onReorder={updateToDoItemsList}>
+                  {
+                    toDoItemsList.map((item) => (
+                      <ToDoItem
+                        key={item.id}
+                        data={item}
+                        isFocused={focusedItem === item.id}
+                        handleClick={() => focusToDoItem(item.id)}
+                      />
+                    ))
+                  }
+                </Reorder.Group>
+              </div>
+            </ConditionalRender.Slot>
+            <ConditionalRender.Fallback>
+              <div className={s.tasksListWrapper}>
+                <EmptyState />
+              </div>
+            </ConditionalRender.Fallback>
+          </ConditionalRender.Provider>
         </div>
       </main>
     </div>

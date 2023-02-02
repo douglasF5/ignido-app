@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { generateQuickId } from './utils';
+import { useQuickId } from './hooks/useQuickId';
 
 // TYPE ANNOTATION
 type ToDoType = "task" | "heading";
@@ -8,6 +8,7 @@ interface ToDoItemData {
   id: string;
   type: ToDoType;
   title: string;
+  isPriority: boolean | null;
   isChecked: boolean | null;
   actions: string[] | null;
 }
@@ -34,6 +35,7 @@ interface ToDoContextProvider {
   blurToDoItem: () => void;
   duplicateToDoItem: (id: string) => void;
   deleteToDoItem: (id: string) => void;
+  updateToDoItemsList: (newToDoItemsList: ToDoItemData[]) => void;
 }
 
 // TO DOS INITIAL DATA
@@ -43,6 +45,7 @@ const toDoItemsData: ToDoItemData[] = [
     type: "task",
     title: "Walk the dog",
     isChecked: false,
+    isPriority: false,
     actions: null
   },
   {
@@ -50,6 +53,7 @@ const toDoItemsData: ToDoItemData[] = [
     type: "task",
     title: "Dinner with mom",
     isChecked: false,
+    isPriority: false,
     actions: null
   },
   {
@@ -57,6 +61,7 @@ const toDoItemsData: ToDoItemData[] = [
     type: "heading",
     title: "This is a heading",
     isChecked: null,
+    isPriority: null,
     actions: null
   },
   {
@@ -64,6 +69,7 @@ const toDoItemsData: ToDoItemData[] = [
     type: "task",
     title: "Integer urna interdum massa libero auctor neque turpis turpis semper. Duis vel sed fames integer. This is the content.",
     isChecked: false,
+    isPriority: false,
     actions: null
   },
 ];
@@ -75,6 +81,7 @@ export const ToDoContext = createContext({} as ToDoContextProvider);
 export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
   const [toDoItemsList, setToDoItemsList] = useState(toDoItemsData);
   const [focusedItem, setFocusedItem] = useState<string | null>(null);
+  const [draggingItem, setDraggingItem] = useState<string | null>(null);
   const [isConfettiRunning, setIsConfettiRunning] = useState(false);
   const completeTasks = toDoItemsList.reduce((count, task) => {
     if (task.isChecked) count++;
@@ -87,6 +94,10 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
   }, 0);
 
   const areAllTasksCompleted = totalTasksCount === completeTasks && [totalTasksCount, completeTasks].every(variable => variable > 0);
+
+  function updateToDoItemsList(newToDoItemsList: ToDoItemData[]) {
+    setToDoItemsList(newToDoItemsList);
+  }
 
   function focusToDoItem(id: string) {
     setFocusedItem(id);
@@ -113,16 +124,19 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
 
   function addNewToDoItem({ title }: ToDoItemRawData) {
     const isHeading = title[0] === "#";
+    const hasPriority = title[0] === "*";
+    const trimmedTitle = isHeading || hasPriority ? title.slice(1).trim() : title.trim();
 
     const newToDoItem = {
-      id: generateQuickId(),
+      id: useQuickId(),
       type: isHeading ? "heading" : "task" as ToDoType,
-      title: isHeading ? title.slice(1).trim() : title.trim(),
-      isChecked: false,
+      title: trimmedTitle,
+      isChecked: isHeading ? null : false,
+      isPriority: isHeading ? null : hasPriority,
       actions: null
     };
 
-    const newToDosList = [...toDoItemsList, newToDoItem];
+    const newToDosList = [newToDoItem, ...toDoItemsList];
     setToDoItemsList(newToDosList);
   }
 
@@ -133,7 +147,7 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
 
     const newToDoItem = {
       ...toDoItemsList[toDoIndex],
-      id: generateQuickId()
+      id: useQuickId()
     };
 
     const newToDosList = [
@@ -175,7 +189,8 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
       focusToDoItem,
       blurToDoItem,
       duplicateToDoItem,
-      deleteToDoItem
+      deleteToDoItem,
+      updateToDoItemsList
     }}>
       {children}
     </ToDoContext.Provider>

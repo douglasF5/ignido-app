@@ -76,6 +76,10 @@
   @include t.useTitle;
 }
 
+.mainWrapper {
+  @include l.useSectionContainer;
+}
+
 .addNewTaskContainer {
   @include l.useFlex($direction: row, $justify: space-between);
   padding-right: 12px;
@@ -163,9 +167,16 @@
 .tasksListWrapper {
   position: relative;
   border-top: 1px solid var(--c-outline);
+
+  ul,
+  li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
 }
 
-.tasksListWrapper.hasFocusWithin::before {
+.tasksListWrapper[data-variant-state="focusWithin"]::before {
   content: '';
   position: absolute;
   z-index: 1;
@@ -174,10 +185,10 @@
   right: 0;
   bottom: 0;
   background-color: rgba(c.getColor('background'), 0.64);
-  animation: overLayFadeIn 150ms ease;
+  animation: overlayFadeIn 150ms ease;
 }
 
-@keyframes overLayFadeIn {
+@keyframes overlayFadeIn {
   0% {
     opacity: 0;
   }

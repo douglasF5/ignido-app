@@ -1,11 +1,4 @@
-type ClassName = string | null;
-
-export function composeClassNames(classesArray: ClassName[]) {
-  const classListString = classesArray.filter(item => item !== null).join(" ");
-  return classListString;
-}
-
-export function generateQuickId(prefix: string = "id") {
+export function useQuickId(prefix: string = "id") {
   const lettersMap = ['q', 'u', 'i', 'c', 'k'];
   const loopRounds = Math.floor(Math.random() * (6 - 3) + 3);
   let idTail = '';

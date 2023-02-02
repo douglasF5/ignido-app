@@ -25,7 +25,30 @@
     position: relative;
     background-color: var(--c-background);
     opacity: 1;
-    z-index: 3;
+    z-index: 2;
+  }
+
+  &.isDragging {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  &.isFocused.isDragging {
+    z-index: 4;
+  }
+
+  .inputEditToDoItem {
+    @include t.useBase;
+    flex-grow: 1;
+    padding: 16px 0 16px 0;
+    color: inherit;
+    background-color: transparent;
+    border: none;
+
+    &::placeholder {
+      color: var(--c-on-surface-low);
+    }
   }
 }
 
@@ -33,6 +56,27 @@
   gap: 4px;
   padding: 24px 8px 12px 0;
   border-bottom: 1px solid var(--c-primary);
+
+  .inputEditToDoItem {
+    @include t.useTitle;
+    color: var(--c-primary);
+    flex-grow: 1;
+
+    &::placeholder {
+      color: var(--c-on-surface-low);
+    }
+  }
+}
+
+.headingTitle {
+  @include t.useTitle;
+  color: var(--c-primary);
+  flex-grow: 1;
+
+  &:empty::before {
+    content: 'Untitled heading';
+    color: var(--c-on-surface-low);
+  }
 }
 
 .headingIcon {
@@ -46,17 +90,6 @@
 
   &:empty::before {
     content: 'Untitled task';
-    color: var(--c-on-surface-low);
-  }
-}
-
-.headingTitle {
-  @include t.useTitle;
-  color: var(--c-primary);
-  flex-grow: 1;
-
-  &:empty::before {
-    content: 'Untitled heading';
     color: var(--c-on-surface-low);
   }
 }
@@ -106,6 +139,28 @@
 
 .boxCheckbox[data-state='checked'] .checkBoxIndicator {
   animation: fadeIn 200ms ease-out;
+}
+
+.priorityIndicator {
+  width: 12px;
+}
+
+.dragIndicator {
+  opacity: 0;
+  flex-shrink: 0;
+  padding: 4px;
+  transition: opacity 100ms ease;
+  cursor: grab;
+
+  @media(hover: hover) {
+    .container:hover & {
+      opacity: 1;
+    }
+  }
+
+  & img {
+    pointer-events: none;
+  }
 }
 
 .actionsBarWrapper {
