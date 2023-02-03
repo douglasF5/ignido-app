@@ -18,9 +18,9 @@ function App() {
     areAllTasksCompleted,
     isConfettiRunning,
     focusedItem,
+    draggingItem,
     confettiCleanUp,
     addNewToDoItem,
-    focusToDoItem,
     updateToDoItemsList
   } = useToDoContent();
   const [inputContent, setInputContent] = useState('');
@@ -95,7 +95,8 @@ function App() {
             <ConditionalRender.Slot>
               <div
                 className={s.tasksListWrapper}
-                data-variant-state={focusedItem ? "focusWithin" : "default"}
+                data-focus-within={focusedItem ? "true" : "false"}
+                data-dragging-within={draggingItem ? "true" : "false"}
               >
                 <Reorder.Group axis="y" values={toDoItemsList} onReorder={updateToDoItemsList}>
                   {
@@ -104,7 +105,7 @@ function App() {
                         key={item.id}
                         data={item}
                         isFocused={focusedItem === item.id}
-                        handleClick={() => focusToDoItem(item.id)}
+                        isDragging={draggingItem === item.id}
                       />
                     ))
                   }

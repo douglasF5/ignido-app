@@ -14,23 +14,24 @@ interface ToDoItemProps {
     title: string;
     isChecked: boolean | null;
     isPriority: boolean | null;
-    actions: string[] | null;
   };
   isFocused: boolean;
-  handleClick: () => void;
+  isDragging: boolean;
 }
 
-export function ToDoItem({ data, handleClick, isFocused }: ToDoItemProps) {
-  const { toggleToDoCheck } = useToDoContent();
+export function ToDoItem({ data, isFocused, isDragging }: ToDoItemProps) {
+  const {
+    setDraggingItem,
+    updateToDoItem,
+    setFocusedItem
+  } = useToDoContent();
   const cs = useComposableStyles(s);
-  // const [inputToDoItemTitle, setInputToDoItemTitle] = useState(data.title);
   const focusStyle = isFocused ? "isFocused" : null;
-  const [isDragging, setIsDragging] = useState(false);
   const dragControls = useDragControls();
 
   function handleDrag(e: React.PointerEvent<HTMLDivElement>) {
     dragControls.start(e);
-    setIsDragging(true);
+    setDraggingItem(data.id);
   }
 
   return (
@@ -44,20 +45,24 @@ export function ToDoItem({ data, handleClick, isFocused }: ToDoItemProps) {
             data.isChecked ? "isChecked" : null
           ])}>
             <div>
-              <Checkbox.Root id={data.id} className={s.boxCheckbox} checked={data.isChecked as boolean} onCheckedChange={() => toggleToDoCheck(data.id)}>
+              <Checkbox.Root id={data.id} className={s.boxCheckbox} checked={data.isChecked as boolean} onCheckedChange={() => updateToDoItem(data.id, { isChecked: !data.isChecked })}>
                 <Checkbox.Indicator className={s.checkBoxIndicator}>
                   <img src="/check.svg" alt="Check" />
                 </Checkbox.Indicator>
               </Checkbox.Root>
             </div>
             {data.isPriority && <img className={s.priorityIndicator} src="/flag-fill.svg" alt="Priority" />}
-            <p className={s.taskTitle} onClick={handleClick}>{data.title}</p>
-            <div className={s.dragIndicator} onPointerDown={(e) => handleDrag(e)} onPointerUp={() => setIsDragging(false)}>
+            <p className={s.taskTitle} onClick={() => setFocusedItem(data.id)}>{data.title}</p>
+            <div className={s.dragIndicator} onPointerDown={(e) => handleDrag(e)} onPointerUp={() => setDraggingItem(null)}>
               <img src="/drag-indicator.svg" alt="Drag indicator" />
             </div>
             {isFocused && (
               <div className={s.actionsBarWrapper}>
-                <ActionsBar itemId={data.id} />
+                <ActionsBar
+                  itemId={data.id}
+                  isHeading={false}
+                  isPriority={data.isPriority as boolean}
+                />
               </div>
             )}
           </div>
@@ -67,13 +72,17 @@ export function ToDoItem({ data, handleClick, isFocused }: ToDoItemProps) {
         <Reorder.Item value={data} id={data.id}>
           <div className={cs(["container", "isHeading", focusStyle])}>
             <span className={s.headingIcon}>#</span>
-            <p className={s.headingTitle} onClick={handleClick}>{data.title}</p>
-            <div className={s.dragIndicator} onPointerDown={(e) => handleDrag(e)} onPointerUp={() => setIsDragging(false)}>
+            <p className={s.headingTitle} onClick={() => setFocusedItem(data.id)}>{data.title}</p>
+            <div className={s.dragIndicator} onPointerDown={(e) => handleDrag(e)} onPointerUp={() => setDraggingItem(null)}>
               <img src="/drag-indicator.svg" alt="Drag indicator" />
             </div>
             {isFocused && (
               <div className={s.actionsBarWrapper}>
-                <ActionsBar itemId={data.id} />
+                <ActionsBar
+                  itemId={data.id}
+                  isHeading={true}
+                  isPriority={data.isPriority as boolean}
+                />
               </div>
             )}
           </div>

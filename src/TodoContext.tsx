@@ -10,7 +10,6 @@ interface ToDoItemData {
   title: string;
   isPriority: boolean | null;
   isChecked: boolean | null;
-  actions: string[] | null;
 }
 
 interface ToDoItemRawData {
@@ -28,11 +27,12 @@ interface ToDoContextProvider {
   isConfettiRunning: boolean;
   areAllTasksCompleted: boolean;
   focusedItem: string | null;
-  toggleToDoCheck: (id: string) => void;
+  draggingItem: string | null;
+  setFocusedItem: (id: string | null) => void;
+  setDraggingItem: (id: string | null) => void;
+  updateToDoItem: (id: string, updateObject: Partial<ToDoItemData>) => void;
   confettiCleanUp: () => void;
   addNewToDoItem: (data: ToDoItemRawData) => void;
-  focusToDoItem: (id: string) => void;
-  blurToDoItem: () => void;
   duplicateToDoItem: (id: string) => void;
   deleteToDoItem: (id: string) => void;
   updateToDoItemsList: (newToDoItemsList: ToDoItemData[]) => void;
@@ -45,32 +45,28 @@ const toDoItemsData: ToDoItemData[] = [
     type: "task",
     title: "Walk the dog",
     isChecked: false,
-    isPriority: false,
-    actions: null
+    isPriority: false
   },
   {
     id: "2",
     type: "task",
     title: "Dinner with mom",
     isChecked: false,
-    isPriority: false,
-    actions: null
+    isPriority: false
   },
   {
     id: "3",
     type: "heading",
     title: "This is a heading",
     isChecked: null,
-    isPriority: null,
-    actions: null
+    isPriority: null
   },
   {
     id: "4",
     type: "task",
     title: "Integer urna interdum massa libero auctor neque turpis turpis semper. Duis vel sed fames integer. This is the content.",
     isChecked: false,
-    isPriority: false,
-    actions: null
+    isPriority: false
   },
 ];
 
@@ -99,28 +95,20 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
     setToDoItemsList(newToDoItemsList);
   }
 
-  function focusToDoItem(id: string) {
-    setFocusedItem(id);
-  }
+  // function toggleToDoCheck(id: string) {
+  //   const newToDosList = toDoItemsList.map(item => {
+  //     if (item.id === id) {
+  //       return {
+  //         ...item,
+  //         isChecked: !item.isChecked
+  //       };
+  //     } else {
+  //       return item;
+  //     }
+  //   });
 
-  function blurToDoItem() {
-    setFocusedItem(null);
-  }
-
-  function toggleToDoCheck(id: string) {
-    const newToDosList = toDoItemsList.map(item => {
-      if (item.id === id) {
-        return {
-          ...item,
-          isChecked: !item.isChecked
-        };
-      } else {
-        return item;
-      }
-    });
-
-    setToDoItemsList(newToDosList);
-  }
+  //   setToDoItemsList(newToDosList);
+  // }
 
   function addNewToDoItem({ title }: ToDoItemRawData) {
     const isHeading = title[0] === "#";
@@ -165,6 +153,21 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
 
   }
 
+  function updateToDoItem(id: string, updateObject: Partial<ToDoItemData>) {
+    const newToDosList = toDoItemsList.map(item => {
+      if (item.id === id) {
+        return {
+          ...item,
+          ...updateObject
+        };
+      } else {
+        return item;
+      }
+    });
+
+    setToDoItemsList(newToDosList);
+  }
+
   function confettiCleanUp() {
     setIsConfettiRunning(false);
   }
@@ -183,11 +186,12 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
       isConfettiRunning,
       areAllTasksCompleted,
       focusedItem,
-      toggleToDoCheck,
+      draggingItem,
+      setFocusedItem,
+      setDraggingItem,
+      updateToDoItem,
       confettiCleanUp,
       addNewToDoItem,
-      focusToDoItem,
-      blurToDoItem,
       duplicateToDoItem,
       deleteToDoItem,
       updateToDoItemsList

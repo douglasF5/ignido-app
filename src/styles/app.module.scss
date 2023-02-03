@@ -176,7 +176,7 @@
   }
 }
 
-.tasksListWrapper[data-variant-state="focusWithin"]::before {
+.tasksListWrapper[data-focus-within="true"][data-dragging-within="false"]::before {
   content: '';
   position: absolute;
   z-index: 1;

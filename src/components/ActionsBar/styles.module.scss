@@ -1,6 +1,7 @@
 @use '../../styles/text.module' as t;
 @use '../../styles/layout.module' as l;
 @use '../../styles/colors.module' as c;
+@use '../../styles/utils.module' as u;
 
 .container {
   @include l.useFlex($direction: row, $align: center);
@@ -28,9 +29,10 @@
       background-color: rgba(c.getColor("on-surface"), 0.08);
     }
   }
+}
 
-  & span {
-    @include t.useTitle($size: "S", $style: normal);
-    color: var(--c-on-surface);
-  }
+.actionLabel {
+  @include u.useSROnly;
+  @include t.useTitle($size: "S", $style: normal);
+  color: var(--c-on-surface);
 }
