@@ -1,6 +1,6 @@
 import { useToDoContent } from './TodoContext';
 import { Reorder } from "framer-motion";
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import './styles/main.scss';
 import s from './styles/app.module.scss';
 import Confetti from 'react-confetti';
@@ -13,8 +13,7 @@ import { ConditionalRender } from './components/ConditionalRender';
 function App() {
   const {
     toDoItemsList,
-    totalTasksCount,
-    completeTasks,
+    statsData,
     areAllTasksCompleted,
     isConfettiRunning,
     focusedItem,
@@ -60,8 +59,8 @@ function App() {
             <h2>{customMessage.text}</h2>
           </div>
           <div className={s.statsWrapper}>
-            <Stat label='Done' data={completeTasks} />
-            <Stat label='Tasks' data={totalTasksCount} />
+            <Stat label='Done' data={statsData.completeTasks} />
+            <Stat label='Tasks' data={statsData.totalTasksCount} />
             <a className={s.profileContainer} href="https://github.com/douglasF5" title="@douglasF5 on GitHub" target="_blank" rel="noreferrer">
               <img className={s.profilePic} src="/douglas-ferreira-profile-pic.png" alt="@douglasF5" />
               <div className={s.profileLabelWrapper}>

@@ -9,6 +9,8 @@
   gap: 12px;
   padding-left: 12px;
   border-bottom: 1px solid var(--c-outline);
+  background-color: rgba(c.getColor("background"), 0.5);
+  z-index: 1;
 
   & ::selection {
     color: var(--c-surface);
@@ -29,9 +31,12 @@
   }
 
   &.isDragging {
+    position: relative;
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    z-index: 3;
+    background-color: rgba(c.getColor("primary"), 0.08);
   }
 
   &.isFocused.isDragging {
@@ -113,7 +118,6 @@
   }
 
   .isChecked & {
-    border: 1px solid var(--c-primary);
     background-color: var(--c-primary);
   }
 
@@ -137,12 +141,42 @@
   }
 }
 
+@keyframes fadeOut {
+  from {
+    background-color: var(--c-primary);
+  }
+
+  to {
+    background-color: transparent;
+  }
+}
+
+@keyframes fadeOutCheckIndicator {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(15%);
+  }
+}
+
 .boxCheckbox[data-state='checked'] .checkBoxIndicator {
   animation: fadeIn 200ms ease-out;
 }
 
+.boxCheckbox[data-state='unchecked']:not(.dragActive .boxCheckbox[data-state='unchecked']) {
+  animation: fadeOut 200ms ease-in;
+}
+
+.boxCheckbox[data-state='unchecked'] .checkBoxIndicator {
+  animation: fadeOutCheckIndicator 200ms ease-in;
+}
+
 .priorityIndicator {
-  width: 12px;
+  width: 14px;
 }
 
 .dragIndicator {
@@ -180,5 +214,17 @@
   to {
     opacity: 1;
     transform: translateY(-105%);
+  }
+}
+
+@keyframes actionsBarFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(-105%);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-98%);
   }
 }

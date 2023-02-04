@@ -41,6 +41,7 @@ export function ToDoItem({ data, isFocused, isDragging }: ToDoItemProps) {
           <div className={cs([
             "container",
             focusStyle,
+            isDragging !== undefined ? "dragActive" : null,
             isDragging ? "isDragging" : null,
             data.isChecked ? "isChecked" : null
           ])}>
@@ -70,7 +71,13 @@ export function ToDoItem({ data, isFocused, isDragging }: ToDoItemProps) {
       </ConditionalRender.Slot>
       <ConditionalRender.Fallback>
         <Reorder.Item value={data} id={data.id}>
-          <div className={cs(["container", "isHeading", focusStyle])}>
+          <div className={cs([
+            "container",
+            "isHeading",
+            isDragging !== undefined ? "dragActive" : null,
+            isDragging ? "isDragging" : null,
+            focusStyle
+          ])}>
             <span className={s.headingIcon}>#</span>
             <p className={s.headingTitle} onClick={() => setFocusedItem(data.id)}>{data.title}</p>
             <div className={s.dragIndicator} onPointerDown={(e) => handleDrag(e)} onPointerUp={() => setDraggingItem(null)}>

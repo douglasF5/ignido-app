@@ -20,10 +20,14 @@ interface ToDoContextProviderProps {
   children: ReactNode;
 };
 
+interface IStatsData {
+  completeTasks: Array<number>;
+  totalTasksCount: Array<number>;
+};
+
 interface ToDoContextProvider {
   toDoItemsList: ToDoItemData[];
-  completeTasks: number;
-  totalTasksCount: number;
+  statsData: IStatsData;
   isConfettiRunning: boolean;
   areAllTasksCompleted: boolean;
   focusedItem: string | null;
@@ -75,40 +79,44 @@ export const ToDoContext = createContext({} as ToDoContextProvider);
 
 // CONTEXT PROVIDING
 export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
-  const [toDoItemsList, setToDoItemsList] = useState(toDoItemsData);
+  const [toDoItemsList, setToDoItemsList] = useState(JSON.parse(localStorage.getItem('ignido.appData') ?? "") as ToDoItemData[] || toDoItemsData);
   const [focusedItem, setFocusedItem] = useState<string | null>(null);
   const [draggingItem, setDraggingItem] = useState<string | null>(null);
   const [isConfettiRunning, setIsConfettiRunning] = useState(false);
-  const completeTasks = toDoItemsList.reduce((count, task) => {
-    if (task.isChecked) count++;
-    return count;
-  }, 0);
 
-  const totalTasksCount = toDoItemsList.reduce((count, task) => {
-    if (task.type === "task") count++;
-    return count;
-  }, 0);
+  // const initialCompleteTasks = toDoItemsList.reduce((count, task) => {
+  //   if (task.isChecked) count++;
+  //   return count;
+  // }, 0);
 
-  const areAllTasksCompleted = totalTasksCount === completeTasks && [totalTasksCount, completeTasks].every(variable => variable > 0);
+  // const initialTotalTasksCount = toDoItemsList.reduce((count, task) => {
+  //   if (task.type === "task") count++;
+  //   return count;
+  // }, 0);
+
+  function calculateTasksCount(array: ToDoItemData[], property: keyof ToDoItemData, value: string | boolean) {
+    return array.reduce((count, item) => {
+      if (item[property] === value) count++;
+      return count;
+    }, 0);
+  }
+
+  const [statsData, setStatsData] = useState<IStatsData>({
+    completeTasks: [
+      0,
+      calculateTasksCount(toDoItemsList, "isChecked", true)
+    ],
+    totalTasksCount: [
+      0,
+      calculateTasksCount(toDoItemsList, "type", "task")
+    ]
+  });
+
+  const areAllTasksCompleted = statsData.totalTasksCount[1] === statsData.completeTasks[1] && [statsData.totalTasksCount[1], statsData.completeTasks[1]].every(variable => variable as number > 0);
 
   function updateToDoItemsList(newToDoItemsList: ToDoItemData[]) {
     setToDoItemsList(newToDoItemsList);
   }
-
-  // function toggleToDoCheck(id: string) {
-  //   const newToDosList = toDoItemsList.map(item => {
-  //     if (item.id === id) {
-  //       return {
-  //         ...item,
-  //         isChecked: !item.isChecked
-  //       };
-  //     } else {
-  //       return item;
-  //     }
-  //   });
-
-  //   setToDoItemsList(newToDosList);
-  // }
 
   function addNewToDoItem({ title }: ToDoItemRawData) {
     const isHeading = title[0] === "#";
@@ -123,6 +131,15 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
       isPriority: isHeading ? null : hasPriority,
       actions: null
     };
+
+    if (!isHeading) {
+      setStatsData(prev => {
+        return {
+          ...prev,
+          totalTasksCount: [prev.totalTasksCount[1], prev.totalTasksCount[1] + 1]
+        };
+      });
+    }
 
     const newToDosList = [newToDoItem, ...toDoItemsList];
     setToDoItemsList(newToDosList);
@@ -144,18 +161,54 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
       ...elementsAfter
     ];
 
+    if (newToDoItem.type === "task") {
+      const tasksCompleteIncrement = newToDoItem.isChecked ? 1 : 0;
+
+      setStatsData(prev => {
+        return {
+          completeTasks: [prev.completeTasks[1], prev.completeTasks[1] + tasksCompleteIncrement],
+          totalTasksCount: [prev.completeTasks[1], prev.totalTasksCount[1] + 1]
+        };
+      });
+    }
+
     setToDoItemsList(newToDosList);
   }
 
   function deleteToDoItem(id: string) {
-    const newToDosList = toDoItemsList.filter(toDo => toDo.id !== id);
-    setToDoItemsList(newToDosList);
+    let tasksCompleteDecrement = 0;
+    let shouldUpdateTasksCount = false;
 
+    const newToDosList = toDoItemsList.filter(toDo => {
+      if (toDo.id === id) {
+        shouldUpdateTasksCount = toDo.type === "task";
+        tasksCompleteDecrement = toDo.isChecked ? -1 : 0;
+      }
+      return toDo.id !== id;
+    });
+
+    if (shouldUpdateTasksCount) {
+      setStatsData(prev => {
+        return {
+          completeTasks: [prev.completeTasks[1], prev.completeTasks[1] + tasksCompleteDecrement],
+          totalTasksCount: [prev.completeTasks[1], prev.totalTasksCount[1] - 1]
+        };
+      });
+    }
+
+    setToDoItemsList(newToDosList);
   }
 
   function updateToDoItem(id: string, updateObject: Partial<ToDoItemData>) {
+    let tasksCountIncrement = 0;
+    const shouldUpdateTasksCount = "isChecked" in updateObject;
+
     const newToDosList = toDoItemsList.map(item => {
       if (item.id === id) {
+        if (item.type === "task" && shouldUpdateTasksCount) {
+          tasksCountIncrement = updateObject.isChecked ? 1 : -1;
+        }
+
         return {
           ...item,
           ...updateObject
@@ -164,6 +217,15 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
         return item;
       }
     });
+
+    if (shouldUpdateTasksCount) {
+      setStatsData(prev => {
+        return {
+          ...prev,
+          completeTasks: [prev.completeTasks[1], prev.completeTasks[1] + tasksCountIncrement]
+        };
+      });
+    }
 
     setToDoItemsList(newToDosList);
   }
@@ -178,11 +240,14 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
     }
   }, [areAllTasksCompleted]);
 
+  useEffect(() => {
+    localStorage.setItem('ignido.appData', JSON.stringify(toDoItemsList));
+  }, [toDoItemsList]);
+
   return (
     <ToDoContext.Provider value={{
       toDoItemsList,
-      completeTasks,
-      totalTasksCount,
+      statsData,
       isConfettiRunning,
       areAllTasksCompleted,
       focusedItem,
