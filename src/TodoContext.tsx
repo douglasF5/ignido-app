@@ -79,20 +79,16 @@ export const ToDoContext = createContext({} as ToDoContextProvider);
 
 // CONTEXT PROVIDING
 export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
-  const [toDoItemsList, setToDoItemsList] = useState(JSON.parse(localStorage.getItem('ignido.appData') ?? "") as ToDoItemData[] || toDoItemsData);
+  const [toDoItemsList, setToDoItemsList] = useState(
+    JSON.parse(getDataFromLocalStorage()) as ToDoItemData[] || toDoItemsData);
   const [focusedItem, setFocusedItem] = useState<string | null>(null);
   const [draggingItem, setDraggingItem] = useState<string | null>(null);
   const [isConfettiRunning, setIsConfettiRunning] = useState(false);
 
-  // const initialCompleteTasks = toDoItemsList.reduce((count, task) => {
-  //   if (task.isChecked) count++;
-  //   return count;
-  // }, 0);
-
-  // const initialTotalTasksCount = toDoItemsList.reduce((count, task) => {
-  //   if (task.type === "task") count++;
-  //   return count;
-  // }, 0);
+  function getDataFromLocalStorage() {
+    const data = localStorage.getItem('ignido.appData');
+    return data ?? "";
+  }
 
   function calculateTasksCount(array: ToDoItemData[], property: keyof ToDoItemData, value: string | boolean) {
     return array.reduce((count, item) => {
@@ -167,7 +163,7 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
       setStatsData(prev => {
         return {
           completeTasks: [prev.completeTasks[1], prev.completeTasks[1] + tasksCompleteIncrement],
-          totalTasksCount: [prev.completeTasks[1], prev.totalTasksCount[1] + 1]
+          totalTasksCount: [prev.totalTasksCount[1], prev.totalTasksCount[1] + 1]
         };
       });
     }
@@ -191,7 +187,7 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
       setStatsData(prev => {
         return {
           completeTasks: [prev.completeTasks[1], prev.completeTasks[1] + tasksCompleteDecrement],
-          totalTasksCount: [prev.completeTasks[1], prev.totalTasksCount[1] - 1]
+          totalTasksCount: [prev.totalTasksCount[1], prev.totalTasksCount[1] - 1]
         };
       });
     }

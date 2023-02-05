@@ -1,6 +1,5 @@
 import { useToDoContent } from './TodoContext';
 import { Reorder } from "framer-motion";
-import { useState, FormEvent, useEffect } from 'react';
 import './styles/main.scss';
 import s from './styles/app.module.scss';
 import Confetti from 'react-confetti';
@@ -8,6 +7,7 @@ import { Stat } from './components/Stat';
 import { LogoFace } from './components/LogoFace';
 import { ToDoItem } from './components/ToDoItem';
 import { EmptyState } from './components/EmptyState';
+import { InputBar } from './components/InputBar';
 import { ConditionalRender } from './components/ConditionalRender';
 
 function App() {
@@ -19,21 +19,13 @@ function App() {
     focusedItem,
     draggingItem,
     confettiCleanUp,
-    addNewToDoItem,
     updateToDoItemsList
   } = useToDoContent();
-  const [inputContent, setInputContent] = useState('');
 
   const customMessage = {
     logoFace: areAllTasksCompleted ? 'coffee' : 'bolt',
     text: areAllTasksCompleted ? 'You did it!' : 'Ignido'
   };
-
-  function handleSubmit(e: FormEvent<EventTarget>) {
-    e.preventDefault();
-    addNewToDoItem({ title: inputContent });
-    setInputContent('');
-  }
 
   return (
     <div>
@@ -74,22 +66,7 @@ function App() {
       <main className={s.mainWrapper}>
         <h1 className={s.pageMainHeading}>Ignido - to-do app</h1>
         <div className={s.mainContentWrapper}>
-          <form className={s.addNewTaskContainer} onSubmit={handleSubmit}>
-            <input
-              className={s.inputFieldAddtask}
-              type="text"
-              placeholder='Add new task...'
-              value={inputContent}
-              onChange={(e) => setInputContent(e.target.value)}
-            />
-            <button
-              disabled={inputContent === ''}
-              className={s.buttonAddTask}
-              type="submit"
-            >
-              Add
-            </button>
-          </form>
+          <InputBar />
           <ConditionalRender.Provider condition={toDoItemsList.length > 0}>
             <ConditionalRender.Slot>
               <div

@@ -21,4 +21,5 @@ body {
   background-color: var(--c-background);
   color: var(--c-on-surface);
   font-family: t.$font-face-primary;
+  overflow-y: scroll;
 }

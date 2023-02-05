@@ -1,0 +1,126 @@
+@use '../../styles/utils.module' as u;
+@use '../../styles/layout.module' as l;
+@use '../../styles/text.module' as t;
+@use '../../styles/colors.module' as c;
+
+.inputBarWrapper {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  overflow: hidden;
+  border-radius: 4px;
+  z-index: 2;
+
+  &.hasFocusWithin {
+    z-index: 4;
+  }
+}
+
+.addNewTaskContainer {
+  @include l.useFlex($direction: row, $justify: space-between);
+  position: relative;
+  padding-right: 12px;
+  gap: 12px;
+  background-color: var(--c-primary);
+  color: var(--c-on-primary);
+  overflow: hidden;
+  z-index: 2;
+}
+
+.inputFieldAddtask {
+  @include t.useBase($size: "L");
+  padding: 16px 16px;
+  border: none;
+  background-color: transparent;
+  flex-grow: 1;
+
+  &::placeholder {
+    color: var(--c-on-primary-medium);
+  }
+
+  &:focus-visible {
+    outline: 1px solid var(--c-primary);
+  }
+
+  &::selection {
+    color: var(--c-primary);
+    background-color: var(--c-surface);
+  }
+}
+
+.buttonAddTask {
+  @include t.useTitle($style: normal);
+
+  padding: u.toRem(8) u.toRem(16);
+  border: none;
+  border-radius: 4px;
+  background-color: var(--c-surface);
+  color: var(--c-primary);
+  cursor: pointer;
+  box-shadow: 0px 5px 4px rgba(c.getColor('background'), 0.32);
+  transition-property: background-color, box-shadow;
+  transition-duration: 100ms;
+  transition-timing-function: ease;
+
+  @media (hover: hover) {
+    &:not([disabled]):hover {
+      background-color: c.composeLayeredColor("surface", "primary", 2);
+    }
+  }
+
+  &:disabled {
+    background-color: rgba(c.getColor('on-primary'), 0.12);
+    color: rgba(c.getColor('on-primary'), 0.38);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  &:not([disabled]):active {
+    box-shadow: 0px 0px 4px rgba(c.getColor('background'), 0.32);
+  }
+
+  &:focus-visible {
+    outline: 1px solid var(--c-primary);
+  }
+
+  &::selection {
+    color: var(--c-primary);
+    background-color: var(--c-surface);
+  }
+}
+
+.infoSectionContainer {
+  @include l.useFlex($direction: row);
+  gap: 12px;
+  padding: 4px 12px;
+  background-color: c.composeLayeredColor("primary", "on-primary", 2);
+  border-top: 1px solid rgba(c.getColor("on-primary"), 0.08);
+  color: var(--c-on-primary-medium);
+}
+
+.tipWrapper {
+  @include l.useFlex($direction: row);
+  gap: 4px;
+}
+
+.signWrapper {
+  @include l.useFlex($direction: row, $justify: center);
+  padding: 2px;
+  width: 16px;
+  background-color: rgba(c.getColor("on-primary"), 0.16);
+  border-radius: 4px;
+}
+
+.sign {
+  @include t.useTitle($size: "S", $weight: "semibold", $height: "one-liner");
+  text-transform: uppercase;
+
+  &.asterisk {
+    transform: translate(-5%, 17%);
+  }
+}
+
+.label {
+  @include t.useTitle($size: "Mini", $weight: "medium");
+  text-transform: uppercase;
+}

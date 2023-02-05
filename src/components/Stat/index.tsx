@@ -1,5 +1,5 @@
 import s from './styles.module.scss';
-import { AnimatePresence, easeIn, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface StatProps {
   label: string;

@@ -80,78 +80,6 @@
   @include l.useSectionContainer;
 }
 
-.addNewTaskContainer {
-  @include l.useFlex($direction: row, $justify: space-between);
-  padding-right: 12px;
-  gap: 12px;
-  background-color: var(--c-primary);
-  color: var(--c-on-primary);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.inputFieldAddtask {
-  @include t.useBase($size: "L");
-  padding: 16px 16px;
-  border: none;
-  background-color: transparent;
-  flex-grow: 1;
-
-  &::placeholder {
-    color: var(--c-on-primary-medium);
-  }
-
-  &:focus-visible {
-    outline: 1px solid var(--c-primary);
-  }
-
-  &::selection {
-    color: var(--c-primary);
-    background-color: var(--c-surface);
-  }
-}
-
-.buttonAddTask {
-  @include t.useTitle($style: normal);
-
-  padding: u.toRem(8) u.toRem(16);
-  border: none;
-  border-radius: 4px;
-  background-color: var(--c-surface);
-  color: var(--c-primary);
-  cursor: pointer;
-  box-shadow: 0px 5px 4px rgba(c.getColor('background'), 0.32);
-  transition-property: background-color, box-shadow;
-  transition-duration: 100ms;
-  transition-timing-function: ease;
-
-  @media (hover: hover) {
-    &:not([disabled]):hover {
-      background-color: c.composeLayeredColor("surface", "primary", 2);
-    }
-  }
-
-  &:disabled {
-    background-color: rgba(c.getColor('on-primary'), 0.12);
-    color: rgba(c.getColor('on-primary'), 0.38);
-    box-shadow: none;
-    cursor: not-allowed;
-  }
-
-  &:not([disabled]):active {
-    box-shadow: 0px 0px 4px rgba(c.getColor('background'), 0.32);
-  }
-
-  &:focus-visible {
-    outline: 1px solid var(--c-primary);
-  }
-
-  &::selection {
-    color: var(--c-primary);
-    background-color: var(--c-surface);
-  }
-}
-
 .pageMainHeading {
   @include u.useSROnly;
 }
@@ -159,8 +87,9 @@
 .mainContentWrapper {
   @include l.useFlex($align: stretch);
   @include l.useContentContainer;
+  position: relative;
   gap: 24px;
-  padding: 0 0 24px 0;
+  padding: 72px 0 24px 0;
   transform: translateY(-32px);
 }
 
