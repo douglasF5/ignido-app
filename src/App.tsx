@@ -89,7 +89,7 @@ function App() {
               </div>
             </ConditionalRender.Slot>
             <ConditionalRender.Fallback>
-              <div className={s.tasksListWrapper}>
+              <div className={s.tasksEmptyListWrapper}>
                 <EmptyState />
               </div>
             </ConditionalRender.Fallback>

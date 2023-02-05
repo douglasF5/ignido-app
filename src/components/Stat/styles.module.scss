@@ -1,10 +1,34 @@
 @use '../../styles/layout.module' as l;
 @use '../../styles/text.module' as t;
+@use '../../styles/colors.module' as c;
 
 .container {
   @include l.useFlex;
   padding: 12px;
   gap: 2px;
+  border-radius: 4px;
+
+  &.isAnimating {
+    animation: dataContainerOnChange 150ms ease-in forwards;
+  }
+}
+
+@keyframes dataContainerOnChange {
+  0% {
+    background-color: transparent;
+  }
+
+  25% {
+    background-color: c.composeLayeredColor("surface", "primary", 2);
+  }
+
+  50% {
+    background-color: transparent;
+  }
+
+  100% {
+    background-color: c.composeLayeredColor("surface", "primary", 2);
+  }
 }
 
 .dataWrapper {

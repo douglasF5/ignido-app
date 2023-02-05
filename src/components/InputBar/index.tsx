@@ -27,7 +27,6 @@ export function InputBar() {
           onChange={(e) => setInputContent(e.target.value)}
           onFocus={() => setInputHasFocus(true)}
           onBlur={() => setInputHasFocus(false)}
-          autoFocus
         />
         <button
           disabled={inputContent === ''}

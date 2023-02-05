@@ -6,6 +6,7 @@
   min-height: 250px;
   padding: 16px;
   gap: 8px;
+  background-color: transparent;
 
   & p {
     @include t.useTitle;
