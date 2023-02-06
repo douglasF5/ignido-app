@@ -34,10 +34,12 @@ export function Stat({ label, data }: StatProps) {
   }, [dataIsAnimating]);
 
   return (
-    <div className={cs([
-      "container",
-      dataIsAnimating && renderCount >= 5 ? "isAnimating" : null
-    ])}>
+    <div
+      className={cs([
+        "container",
+        dataIsAnimating && renderCount >= 5 ? "isAnimating" : null
+      ])}
+    >
       <div
         className={s.dataWrapper}
       >

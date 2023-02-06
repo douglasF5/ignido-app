@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Reorder, useDragControls, motion, AnimatePresence } from "framer-motion";
 import s from './styles.module.scss';
-import { Reorder, useDragControls } from "framer-motion";
 import { useComposableStyles } from '../../hooks/useComposableStyles';
 import { ConditionalRender } from '../ConditionalRender';
 import * as Checkbox from '@radix-ui/react-checkbox';
@@ -21,6 +21,7 @@ interface ToDoItemProps {
 
 export function ToDoItem({ data, isFocused, isDragging }: ToDoItemProps) {
   const {
+    draggingItem,
     setDraggingItem,
     updateToDoItem,
     setFocusedItem
@@ -28,6 +29,21 @@ export function ToDoItem({ data, isFocused, isDragging }: ToDoItemProps) {
   const cs = useComposableStyles(s);
   const focusStyle = isFocused ? "isFocused" : null;
   const dragControls = useDragControls();
+
+  const actionsBarAnimationVariants = {
+    enter: {
+      opacity: 0,
+      translateY: "-98%"
+    },
+    present: {
+      opacity: 1,
+      translateY: "-105%"
+    },
+    exit: {
+      opacity: 0,
+      translateY: "-98%"
+    }
+  };
 
   function handleDrag(e: React.PointerEvent<HTMLDivElement>) {
     dragControls.start(e);
@@ -41,14 +57,22 @@ export function ToDoItem({ data, isFocused, isDragging }: ToDoItemProps) {
           <div className={cs([
             "container",
             focusStyle,
-            isDragging !== undefined ? "dragActive" : null,
+            draggingItem !== null ? "dragActive" : null,
             isDragging ? "isDragging" : null,
             data.isChecked ? "isChecked" : null
           ])}>
             <div>
-              <Checkbox.Root id={data.id} className={s.boxCheckbox} checked={data.isChecked as boolean} onCheckedChange={() => updateToDoItem(data.id, { isChecked: !data.isChecked })}>
+              <Checkbox.Root
+                id={data.id}
+                className={s.boxCheckbox}
+                checked={data.isChecked as boolean}
+                onCheckedChange={() => updateToDoItem(data.id, { isChecked: !data.isChecked })}
+              >
                 <Checkbox.Indicator className={s.checkBoxIndicator}>
-                  <img src="/check.svg" alt="Check" />
+                  <img
+                    src="/check.svg"
+                    alt="Check"
+                  />
                 </Checkbox.Indicator>
               </Checkbox.Root>
             </div>
@@ -57,15 +81,26 @@ export function ToDoItem({ data, isFocused, isDragging }: ToDoItemProps) {
             <div className={s.dragIndicator} onPointerDown={(e) => handleDrag(e)} onPointerUp={() => setDraggingItem(null)}>
               <img src="/drag-indicator.svg" alt="Drag indicator" />
             </div>
-            {isFocused && (
-              <div className={s.actionsBarWrapper}>
-                <ActionsBar
-                  itemId={data.id}
-                  isHeading={false}
-                  isPriority={data.isPriority as boolean}
-                />
-              </div>
-            )}
+            <AnimatePresence initial={false}>
+              {isFocused && (
+                <motion.div
+                  initial="enter"
+                  animate="present"
+                  exit="exit"
+                  transition={{
+                    duration: 0.1
+                  }}
+                  variants={actionsBarAnimationVariants}
+                  className={s.actionsBarWrapper}
+                >
+                  <ActionsBar
+                    itemId={data.id}
+                    isHeading={false}
+                    isPriority={data.isPriority as boolean}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </Reorder.Item>
       </ConditionalRender.Slot>
@@ -74,7 +109,6 @@ export function ToDoItem({ data, isFocused, isDragging }: ToDoItemProps) {
           <div className={cs([
             "container",
             "isHeading",
-            isDragging !== undefined ? "dragActive" : null,
             isDragging ? "isDragging" : null,
             focusStyle
           ])}>
@@ -83,15 +117,26 @@ export function ToDoItem({ data, isFocused, isDragging }: ToDoItemProps) {
             <div className={s.dragIndicator} onPointerDown={(e) => handleDrag(e)} onPointerUp={() => setDraggingItem(null)}>
               <img src="/drag-indicator.svg" alt="Drag indicator" />
             </div>
-            {isFocused && (
-              <div className={s.actionsBarWrapper}>
-                <ActionsBar
-                  itemId={data.id}
-                  isHeading={true}
-                  isPriority={data.isPriority as boolean}
-                />
-              </div>
-            )}
+            <AnimatePresence initial={false}>
+              {isFocused && (
+                <motion.div
+                  initial="enter"
+                  animate="present"
+                  exit="exit"
+                  transition={{
+                    duration: 0.1
+                  }}
+                  variants={actionsBarAnimationVariants}
+                  className={s.actionsBarWrapper}
+                >
+                  <ActionsBar
+                    itemId={data.id}
+                    isHeading={true}
+                    isPriority={data.isPriority as boolean}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </Reorder.Item>
       </ConditionalRender.Fallback>

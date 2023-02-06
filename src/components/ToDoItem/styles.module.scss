@@ -11,7 +11,6 @@
   border-bottom: 1px solid var(--c-outline);
   background-color: var(--c-background);
   z-index: 1;
-  isolation: isolate;
 
   & ::selection {
     color: var(--c-surface);
@@ -109,6 +108,7 @@
   border: 1px solid var(--c-primary);
   background-color: transparent;
   cursor: pointer;
+  transition: background-color 100ms ease-in;
 
   &:focus-visible {
     outline: 1px solid var(--c-primary);
@@ -130,7 +130,27 @@
   }
 }
 
-@keyframes fadeIn {
+@keyframes fadeOutCheckBox {
+  from {
+    background-color: var(--c-primary);
+  }
+
+  to {
+    background-color: transparent;
+  }
+}
+
+@keyframes fadeInCheckBox {
+  from {
+    background-color: transparent;
+  }
+
+  to {
+    background-color: var(--c-primary);
+  }
+}
+
+@keyframes fadeInCheckIndicator {
   from {
     opacity: 0;
     transform: translateY(15%);
@@ -139,16 +159,6 @@
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes fadeOut {
-  from {
-    background-color: var(--c-primary);
-  }
-
-  to {
-    background-color: transparent;
   }
 }
 
@@ -164,15 +174,19 @@
   }
 }
 
-.boxCheckbox[data-state='checked'] .checkBoxIndicator {
-  animation: fadeIn 200ms ease-out;
+.boxCheckbox[data-state='checked'] {
+  background-color: var(--c-primary);
 }
 
-.boxCheckbox[data-state='unchecked']:not(.dragActive .boxCheckbox[data-state='unchecked']) {
-  animation: fadeOut 200ms ease-in;
+.boxCheckbox[data-state='unchecked'] {
+  background-color: transparent;
 }
 
-.boxCheckbox[data-state='unchecked'] .checkBoxIndicator {
+.checkBoxIndicator[data-state='checked'] {
+  animation: fadeInCheckIndicator 200ms ease-out;
+}
+
+.checkBoxIndicator[data-state='unchecked'] {
   animation: fadeOutCheckIndicator 200ms ease-in;
 }
 
@@ -203,29 +217,4 @@
   right: 0;
   top: 0;
   transform: translateY(-105%);
-  animation: actionsBarFadeIn 100ms ease-in;
-}
-
-@keyframes actionsBarFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-98%);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(-105%);
-  }
-}
-
-@keyframes actionsBarFadeOut {
-  from {
-    opacity: 1;
-    transform: translateY(-105%);
-  }
-
-  to {
-    opacity: 0;
-    transform: translateY(-98%);
-  }
 }
