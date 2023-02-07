@@ -74,7 +74,7 @@ function App() {
                 data-focus-within={focusedItem ? "true" : "false"}
                 data-dragging-within={draggingItem ? "true" : "false"}
               >
-                <Reorder.Group axis="y" values={toDoItemsList} onReorder={updateToDoItemsList}>
+                <Reorder.Group initial={false} axis="y" values={toDoItemsList} onReorder={updateToDoItemsList}>
                   {
                     toDoItemsList.map((item) => (
                       <ToDoItem

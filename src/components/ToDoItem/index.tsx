@@ -4,6 +4,7 @@ import s from './styles.module.scss';
 import { useComposableStyles } from '../../hooks/useComposableStyles';
 import { ConditionalRender } from '../ConditionalRender';
 import * as Checkbox from '@radix-ui/react-checkbox';
+import { Tooltip } from '../Tooltip';
 import { useToDoContent } from '../../TodoContext';
 import { ActionsBar } from '../ActionsBar';
 
@@ -78,9 +79,18 @@ export function ToDoItem({ data, isFocused, isDragging }: ToDoItemProps) {
             </div>
             {data.isPriority && <img className={s.priorityIndicator} src="/flag-fill.svg" alt="Priority" />}
             <p className={s.taskTitle} onClick={() => setFocusedItem(data.id)}>{data.title}</p>
-            <div className={s.dragIndicator} onPointerDown={(e) => handleDrag(e)} onPointerUp={() => setDraggingItem(null)}>
-              <img src="/drag-indicator.svg" alt="Drag indicator" />
-            </div>
+            <Tooltip
+              label='Drag to reorder'
+              renderFlag={isDragging}
+            >
+              <div
+                className={s.dragIndicator}
+                onPointerDown={(e) => handleDrag(e)}
+                onPointerUp={() => setDraggingItem(null)}
+              >
+                <img src="/drag-indicator.svg" alt="Drag indicator" />
+              </div>
+            </Tooltip>
             <AnimatePresence initial={false}>
               {isFocused && (
                 <motion.div
@@ -114,9 +124,18 @@ export function ToDoItem({ data, isFocused, isDragging }: ToDoItemProps) {
           ])}>
             <span className={s.headingIcon}>#</span>
             <p className={s.headingTitle} onClick={() => setFocusedItem(data.id)}>{data.title}</p>
-            <div className={s.dragIndicator} onPointerDown={(e) => handleDrag(e)} onPointerUp={() => setDraggingItem(null)}>
-              <img src="/drag-indicator.svg" alt="Drag indicator" />
-            </div>
+            <Tooltip
+              label='Drag to reorder'
+              renderFlag={isDragging}
+            >
+              <div
+                className={s.dragIndicator}
+                onPointerDown={(e) => handleDrag(e)}
+                onPointerUp={() => setDraggingItem(null)}
+              >
+                <img src="/drag-indicator.svg" alt="Drag indicator" />
+              </div>
+            </Tooltip>
             <AnimatePresence initial={false}>
               {isFocused && (
                 <motion.div

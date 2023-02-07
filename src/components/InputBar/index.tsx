@@ -17,8 +17,14 @@ export function InputBar() {
   }
 
   return (
-    <div className={cs(["inputBarWrapper", inputHasFocus ? "hasFocusWithin" : null])}>
-      <form className={s.addNewTaskContainer} onSubmit={handleSubmit}>
+    <motion.div
+      className={cs(["inputBarWrapper", inputHasFocus ? "hasFocusWithin" : null])}
+    >
+      <motion.form
+        className={s.addNewTaskContainer}
+        onSubmit={handleSubmit}
+        animate={{ borderRadius: inputHasFocus ? 0 : "4px" }}
+      >
         <input
           className={s.inputFieldAddtask}
           type="text"
@@ -35,7 +41,7 @@ export function InputBar() {
         >
           Add
         </button>
-      </form>
+      </motion.form>
       <AnimatePresence initial={false}>
         {inputHasFocus && (
           <motion.div
@@ -56,6 +62,6 @@ export function InputBar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };

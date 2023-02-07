@@ -1,0 +1,53 @@
+@use '../../styles/layout.module' as l;
+@use '../../styles/text.module' as t;
+@use '../../styles/colors.module' as c;
+
+.containerTooltip {
+  @include l.useFlex($justify: center, $align: center);
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--c-outline);
+  background-color: c.composeLayeredColor("surface", "on-surface", 2);
+}
+
+.labelTooltip {
+  @include t.useBase($size: "Mini");
+  color: var(--c-on-surface);
+}
+
+.descriptionTooltip {
+  @include t.useBase($size: "Mini");
+  color: var(--c-on-surface-medium);
+}
+
+// .tooltipContent {
+//   transition: opacity 150ms ease;
+// }
+
+.tooltipContent[data-state='closed'] {
+  animation: fadeOut 150ms ease forwards;
+}
+
+.tooltipContent[data-state='delayed-open'] {
+  animation: fadeIn 150ms ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}

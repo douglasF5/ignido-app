@@ -7,10 +7,13 @@
 
   position: relative;
   gap: 12px;
-  padding-left: 12px;
   border-bottom: 1px solid var(--c-outline);
   background-color: var(--c-background);
   z-index: 1;
+
+  &:not(.isHeading) {
+    padding-left: 12px;
+  }
 
   & ::selection {
     color: var(--c-surface);
@@ -42,39 +45,16 @@
   &.isFocused.isDragging {
     z-index: 4;
   }
-
-  .inputEditToDoItem {
-    @include t.useBase;
-    flex-grow: 1;
-    padding: 16px 0 16px 0;
-    color: inherit;
-    background-color: transparent;
-    border: none;
-
-    &::placeholder {
-      color: var(--c-on-surface-low);
-    }
-  }
 }
 
 .isHeading {
   gap: 4px;
-  padding: 24px 8px 12px 0;
   border-bottom: 1px solid var(--c-primary);
-
-  .inputEditToDoItem {
-    @include t.useTitle;
-    color: var(--c-primary);
-    flex-grow: 1;
-
-    &::placeholder {
-      color: var(--c-on-surface-low);
-    }
-  }
 }
 
 .headingTitle {
   @include t.useTitle;
+  padding: 24px 0 12px 0;
   color: var(--c-primary);
   flex-grow: 1;
 
@@ -86,6 +66,7 @@
 
 .headingIcon {
   @include t.useTitle;
+  padding: 24px 0 12px 0;
   color: var(--c-on-surface-low);
 }
 
@@ -197,7 +178,8 @@
 .dragIndicator {
   opacity: 0;
   flex-shrink: 0;
-  padding: 4px;
+  padding: 4px 2px;
+  transform: translateX(15%);
   transition: opacity 100ms ease;
   cursor: grab;
 
@@ -217,4 +199,5 @@
   right: 0;
   top: 0;
   transform: translateY(-105%);
+  z-index: 5;
 }
