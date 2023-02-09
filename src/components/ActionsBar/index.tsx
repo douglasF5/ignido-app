@@ -6,9 +6,10 @@ interface ActionsBarProps {
   itemId: string;
   isHeading: boolean;
   isPriority: boolean;
+  onDismiss: () => void;
 }
 
-export function ActionsBar({ itemId, isHeading, isPriority }: ActionsBarProps) {
+export function ActionsBar({ itemId, isHeading, isPriority, onDismiss }: ActionsBarProps) {
   const {
     setFocusedItem,
     duplicateToDoItem,
@@ -21,14 +22,19 @@ export function ActionsBar({ itemId, isHeading, isPriority }: ActionsBarProps) {
     setFocusedItem(null);
   }
 
+  function handleDismissActionsBar() {
+    onDismiss();
+    setFocusedItem(null);
+  }
+
   return (
     <div className={s.container}>
       <Tooltip
         renderFlag="always"
-        label='Done'
-        description='Save and dismiss menu'
+        label='Save'
+        description='Enter'
       >
-        <button className={s.actionContainer} onClick={() => setFocusedItem(null)}>
+        <button className={s.actionContainer} onClick={handleDismissActionsBar}>
           <img src="/check-green.svg" alt="Close" />
           <span className={s.actionLabel}>Close</span>
         </button>

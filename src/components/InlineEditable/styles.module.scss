@@ -1,0 +1,15 @@
+.input {
+  background-color: transparent;
+  border: none;
+  color: inherit;
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:read-only::selection {
+    background-color: var(--c-primary);
+    color: var(--c-on-primary);
+  }
+}

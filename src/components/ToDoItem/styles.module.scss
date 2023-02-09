@@ -1,6 +1,7 @@
 @use '../../styles/layout.module' as l;
 @use '../../styles/text.module' as t;
 @use '../../styles/colors.module' as c;
+@use '../../styles/utils.module' as u;
 
 .container {
   @include l.useFlex($direction: row, $align: center);
@@ -28,7 +29,7 @@
 
   &.isFocused {
     position: relative;
-    background-color: var(--c-background);
+    background-color: c.composeLayeredColor("background", "primary", 0);
     opacity: 1;
     z-index: 2;
   }
@@ -38,24 +39,21 @@
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    z-index: 8;
-    background-color: rgba(c.getColor("primary"), 0.08);
-  }
-
-  &.isFocused.isDragging {
-    z-index: 4;
+    background-color: rgba(c.getColor("primary"), 0.04);
+    border: 1px solid var(--c-outline);
+    z-index: 5;
   }
 }
 
 .isHeading {
   gap: 4px;
   border-bottom: 1px solid var(--c-primary);
+  color: var(--c-primary);
 }
 
 .headingTitle {
   @include t.useTitle;
   padding: 24px 0 12px 0;
-  color: var(--c-primary);
   flex-grow: 1;
 
   &:empty::before {
@@ -93,6 +91,7 @@
 
   &:focus-visible {
     outline: 1px solid var(--c-primary);
+    outline-offset: 2px;
   }
 
   &:active {
@@ -109,6 +108,10 @@
       background-color: c.composeLayeredColor("primary", "on-primary", 1);
     }
   }
+}
+
+.checkboxLabel {
+  @include u.useSROnly;
 }
 
 @keyframes fadeOutCheckBox {

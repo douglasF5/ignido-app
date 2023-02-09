@@ -1,4 +1,4 @@
-type ClassName = string | null;
+type ClassName = string | null | undefined;
 type ClassCompositionParameter = ClassName[] | string;
 
 export function useComposableStyles(CSSModuleObject: CSSModuleClasses) {
