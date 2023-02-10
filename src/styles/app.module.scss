@@ -127,6 +127,12 @@
   animation: overlayFadeIn 150ms ease;
 }
 
+.tasksListWrapper[data-dragging-within="true"]>* {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 @keyframes overlayFadeIn {
   0% {
     opacity: 0;

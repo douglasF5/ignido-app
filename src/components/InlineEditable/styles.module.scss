@@ -1,7 +1,10 @@
+@use '../../styles/colors.module' as c;
+
 .input {
   background-color: transparent;
   border: none;
   color: inherit;
+  cursor: text;
 
   &:focus,
   &:focus-visible {
@@ -11,5 +14,14 @@
   &:read-only::selection {
     background-color: var(--c-primary);
     color: var(--c-on-primary);
+  }
+
+  &::selection {
+    background-color: var(--c-primary);
+    color: var(--c-on-primary);
+  }
+
+  &::placeholder {
+    color: rgba(c.getColor("on-surface"), 0.48);
   }
 }

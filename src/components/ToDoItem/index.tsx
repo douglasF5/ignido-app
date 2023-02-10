@@ -1,8 +1,7 @@
-import React, { KeyboardEvent, useRef, useState } from 'react';
+import React, { KeyboardEvent, RefObject, useRef, useState } from 'react';
 import { Reorder, useDragControls, motion, AnimatePresence } from "framer-motion";
 import s from './styles.module.scss';
 import { useComposableStyles } from '../../hooks/useComposableStyles';
-import { ConditionalRender } from '../ConditionalRender';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { InlineEditable } from '../InlineEditable';
 import { Tooltip } from '../Tooltip';
@@ -19,9 +18,10 @@ interface ToDoItemProps {
   };
   isFocused: boolean;
   isDragging: boolean;
+  listWrapperContraints: RefObject<HTMLElement>;
 }
 
-export function ToDoItem({ data, isFocused, isDragging }: ToDoItemProps) {
+export function ToDoItem({ data, isFocused, isDragging, listWrapperContraints }: ToDoItemProps) {
   const {
     draggingItem,
     setDraggingItem,
@@ -31,6 +31,7 @@ export function ToDoItem({ data, isFocused, isDragging }: ToDoItemProps) {
   } = useToDoContent();
   const cs = useComposableStyles(s);
   const focusStyle = isFocused ? "isFocused" : null;
+  const isHeading = data.type === "heading";
   const dragControls = useDragControls();
   const [editableItemTitle, setEditableItemTitle] = useState(data.title);
   const titleInput = useRef(null);
@@ -80,7 +81,7 @@ export function ToDoItem({ data, isFocused, isDragging }: ToDoItemProps) {
           target.blur();
           break;
         case "Escape":
-          saveEdits();
+          setEditableItemTitle(data.title);
           setFocusedItem(null);
           target.blur();
           break;
@@ -101,145 +102,90 @@ export function ToDoItem({ data, isFocused, isDragging }: ToDoItemProps) {
   }
 
   return (
-    <ConditionalRender.Provider condition={data.type === "task"}>
-      <ConditionalRender.Slot>
-        <Reorder.Item
-          value={data}
-          style={{ position: "relative", zIndex: 5 }}
-          id={data.id}
-          dragListener={false}
-          dragControls={dragControls}
+    <Reorder.Item
+      value={data}
+      id={data.id}
+      dragListener={false}
+      dragControls={dragControls}
+      dragConstraints={listWrapperContraints}
+      dragElastic={0.1}
+    >
+      <div
+        className={cs([
+          "container",
+          isHeading ? "isHeading" : null,
+          focusStyle,
+          draggingItem !== null ? "dragActive" : null,
+          isDragging ? "isDragging" : null,
+          data.isChecked ? "isChecked" : null
+        ])}
+        onKeyDown={handleKeyboardActions}
+      >
+        {isHeading && <span className={s.headingIcon}>#</span>}
+        {!isHeading && (
+          <div>
+            <Checkbox.Root
+              id={data.id}
+              className={s.boxCheckbox}
+              checked={data.isChecked as boolean}
+              onCheckedChange={() => updateToDoItem(data.id, { isChecked: !data.isChecked })}
+              tabIndex={0}
+            >
+              <Checkbox.Indicator className={s.checkBoxIndicator}>
+                <img
+                  src="/check.svg"
+                  alt="Check"
+                />
+              </Checkbox.Indicator>
+            </Checkbox.Root>
+            <label className={s.checkboxLabel} htmlFor={data.id}>{data.title}</label>
+          </div>
+        )}
+        {data.isPriority && <img className={s.priorityIndicator} src="/flag-fill.svg" alt="Priority" />}
+        <InlineEditable
+          isActive={isFocused}
+          value={editableItemTitle}
+          setValue={setEditableItemTitle}
+          fieldName="To-do title"
+          handleClick={activeItem}
+          className={cs(isHeading ? "headingTitle" : "taskTitle")}
+          ref={titleInput}
+          placeholder={isHeading ? "Heading" : "To-do"}
+        />
+        <Tooltip
+          label='Drag to reorder'
+          renderFlag={isDragging}
         >
           <div
-            className={cs([
-              "container",
-              focusStyle,
-              draggingItem !== null ? "dragActive" : null,
-              isDragging ? "isDragging" : null,
-              data.isChecked ? "isChecked" : null
-            ])}
-            onKeyDown={handleKeyboardActions}
+            className={s.dragIndicator}
+            onPointerDown={(e) => handleDrag(e)}
+            onPointerUp={() => setDraggingItem(null)}
           >
-            <div>
-              <Checkbox.Root
-                id={data.id}
-                className={s.boxCheckbox}
-                checked={data.isChecked as boolean}
-                onCheckedChange={() => updateToDoItem(data.id, { isChecked: !data.isChecked })}
-              >
-                <Checkbox.Indicator className={s.checkBoxIndicator}>
-                  <img
-                    src="/check.svg"
-                    alt="Check"
-                  />
-                </Checkbox.Indicator>
-              </Checkbox.Root>
-              <label className={s.checkboxLabel} htmlFor={data.id}>{data.title}</label>
-            </div>
-            {data.isPriority && <img className={s.priorityIndicator} src="/flag-fill.svg" alt="Priority" />}
-            {/* <p className={s.taskTitle} onClick={() => setFocusedItem(data.id)}>{data.title}</p> */}
-            <InlineEditable
-              isActive={isFocused}
-              value={editableItemTitle}
-              setValue={setEditableItemTitle}
-              fieldName="To-do title"
-              handleClick={activeItem}
-              className={s.taskTitle}
-              ref={titleInput}
-            />
-            <Tooltip
-              label='Drag to reorder'
-              renderFlag={isDragging}
-            >
-              <div
-                className={s.dragIndicator}
-                onPointerDown={(e) => handleDrag(e)}
-                onPointerUp={() => setDraggingItem(null)}
-              >
-                <img src="/drag-indicator.svg" alt="Drag indicator" />
-              </div>
-            </Tooltip>
-            <AnimatePresence initial={false}>
-              {isFocused && (
-                <motion.div
-                  initial="enter"
-                  animate="present"
-                  exit="exit"
-                  transition={{
-                    duration: 0.1
-                  }}
-                  variants={actionsBarAnimationVariants}
-                  className={s.actionsBarWrapper}
-                >
-                  <ActionsBar
-                    itemId={data.id}
-                    isHeading={false}
-                    isPriority={data.isPriority as boolean}
-                    onDismiss={saveEdits}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <img src="/drag-indicator.svg" alt="Drag indicator" />
           </div>
-        </Reorder.Item>
-      </ConditionalRender.Slot>
-      <ConditionalRender.Fallback>
-        <Reorder.Item value={data} id={data.id}>
-          <div
-            className={cs([
-              "container",
-              "isHeading",
-              isDragging ? "isDragging" : null,
-              focusStyle
-            ])}
-            onKeyDown={handleKeyboardActions}
-          >
-            <span className={s.headingIcon}>#</span>
-            <InlineEditable
-              isActive={isFocused}
-              value={editableItemTitle}
-              setValue={setEditableItemTitle}
-              fieldName="To-do title"
-              handleClick={activeItem}
-              className={s.headingTitle}
-              ref={titleInput}
-            />
-            <Tooltip
-              label='Drag to reorder'
-              renderFlag={isDragging}
+        </Tooltip>
+        <AnimatePresence initial={false}>
+          {isFocused && (
+            <motion.div
+              initial="enter"
+              animate="present"
+              exit="exit"
+              transition={{
+                duration: 0.1
+              }}
+              variants={actionsBarAnimationVariants}
+              className={s.actionsBarWrapper}
             >
-              <div
-                className={s.dragIndicator}
-                onPointerDown={(e) => handleDrag(e)}
-                onPointerUp={() => setDraggingItem(null)}
-              >
-                <img src="/drag-indicator.svg" alt="Drag indicator" />
-              </div>
-            </Tooltip>
-            <AnimatePresence initial={false}>
-              {isFocused && (
-                <motion.div
-                  initial="enter"
-                  animate="present"
-                  exit="exit"
-                  transition={{
-                    duration: 0.1
-                  }}
-                  variants={actionsBarAnimationVariants}
-                  className={s.actionsBarWrapper}
-                >
-                  <ActionsBar
-                    itemId={data.id}
-                    isHeading={true}
-                    isPriority={data.isPriority as boolean}
-                    onDismiss={saveEdits}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </Reorder.Item>
-      </ConditionalRender.Fallback>
-    </ConditionalRender.Provider>
+              <ActionsBar
+                itemId={data.id}
+                isHeading={isHeading}
+                isPriority={data.isPriority as boolean}
+                onDismiss={saveEdits}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </Reorder.Item>
   );
 };

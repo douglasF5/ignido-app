@@ -9,8 +9,10 @@ import { ToDoItem } from './components/ToDoItem';
 import { EmptyState } from './components/EmptyState';
 import { InputBar } from './components/InputBar';
 import { ConditionalRender } from './components/ConditionalRender';
+import { useRef } from 'react';
 
 function App() {
+  const todoItemsListWrapper = useRef(null);
   const {
     toDoItemsList,
     statsData,
@@ -73,8 +75,13 @@ function App() {
                 className={s.tasksListWrapper}
                 data-focus-within={focusedItem ? "true" : "false"}
                 data-dragging-within={draggingItem ? "true" : "false"}
+                ref={todoItemsListWrapper}
               >
-                <Reorder.Group initial={false} axis="y" values={toDoItemsList} onReorder={updateToDoItemsList}>
+                <Reorder.Group
+                  initial={false} axis="y"
+                  values={toDoItemsList}
+                  onReorder={updateToDoItemsList}
+                >
                   {
                     toDoItemsList.map((item) => (
                       <ToDoItem
@@ -82,6 +89,7 @@ function App() {
                         data={item}
                         isFocused={focusedItem === item.id}
                         isDragging={draggingItem === item.id}
+                        listWrapperContraints={todoItemsListWrapper}
                       />
                     ))
                   }

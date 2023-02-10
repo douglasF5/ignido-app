@@ -22,4 +22,13 @@ body {
   color: var(--c-on-surface);
   font-family: t.$font-face-primary;
   overflow-y: scroll;
+  -webkit-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+a:focus,
+button:focus {
+  outline-color: 1px solid var(--c-primary);
+  outline-offset: 2px;
 }

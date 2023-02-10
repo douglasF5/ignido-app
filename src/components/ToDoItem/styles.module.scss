@@ -55,11 +55,6 @@
   @include t.useTitle;
   padding: 24px 0 12px 0;
   flex-grow: 1;
-
-  &:empty::before {
-    content: 'Untitled heading';
-    color: var(--c-on-surface-low);
-  }
 }
 
 .headingIcon {
@@ -71,11 +66,6 @@
 .taskTitle {
   flex-grow: 1;
   padding: 16px 0 16px 0;
-
-  &:empty::before {
-    content: 'Untitled task';
-    color: var(--c-on-surface-low);
-  }
 }
 
 .boxCheckbox {

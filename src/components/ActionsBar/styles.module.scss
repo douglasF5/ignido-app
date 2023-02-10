@@ -13,7 +13,6 @@
 .actionContainer {
   @include l.useFlex($direction: row, $align: center);
   gap: 2px;
-  padding: 4px 8px 4px 6px;
   background-color: transparent;
   border: none;
   color: inherit;
@@ -22,6 +21,16 @@
 
   &:not(:last-child) {
     border-right: 1px solid var(--c-outline);
+  }
+
+  &:focus-visible,
+  &:focus,
+  &[data-highlighted] {
+    background-color: rgba(c.getColor("on-surface"), 0.08);
+  }
+
+  &>div {
+    padding: 4px 8px 4px 6px;
   }
 
   @media (hover: hover) {
