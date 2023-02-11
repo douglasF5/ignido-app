@@ -33,6 +33,12 @@
 
   padding: 24px 0;
   min-height: 231px;
+
+  @include u.useBreakpoint(450) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
 }
 
 .logoWrapper {
@@ -41,11 +47,19 @@
 
   & h2 {
     @include t.useHeading;
+
+    @include u.useBreakpoint(450) {
+      font-size: u.toRem(24);
+    }
   }
 }
 
 .statsWrapper {
   @include l.useFlex($direction: row, $align: stretch);
+
+  @include u.useBreakpoint(450) {
+    align-self: center;
+  }
 }
 
 .profileContainer {
@@ -79,6 +93,10 @@
 
 .mainWrapper {
   @include l.useSectionContainer;
+
+  @include u.useBreakpoint(450) {
+    padding: 0;
+  }
 }
 
 .pageMainHeading {
@@ -92,12 +110,17 @@
   gap: 24px;
   padding: 72px 0 24px 0;
   transform: translateY(-32px);
+
+  @include u.useBreakpoint(450) {
+    padding: 0 0 80px 0;
+  }
 }
 
 .tasksListWrapper,
 .tasksEmptyListWrapper {
   position: relative;
   border-top: 1px solid var(--c-outline);
+  z-index: 3;
 
   ul,
   li {
@@ -111,34 +134,16 @@
   background-color: c.composeLayeredColor("background", "on-surface", 1);
 }
 
-.tasksEmptyListWrapper {
+.tasksListWrapper[data-focus-within="true"][data-dragging-within="false"] {
   background-color: transparent;
 }
 
-.tasksListWrapper[data-focus-within="true"][data-dragging-within="false"]::before {
-  content: '';
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(c.getColor('background'), 0.64);
-  animation: overlayFadeIn 150ms ease;
+.tasksEmptyListWrapper {
+  background-color: transparent;
 }
 
 .tasksListWrapper[data-dragging-within="true"]>* {
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-
-@keyframes overlayFadeIn {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
 }

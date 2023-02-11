@@ -1,18 +1,24 @@
+import { useMediaQuery } from 'react-responsive';
+import { useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useToDoContent } from './TodoContext';
-import { Reorder } from "framer-motion";
 import './styles/main.scss';
 import s from './styles/app.module.scss';
+import { AnimatePresence, Reorder } from "framer-motion";
 import Confetti from 'react-confetti';
 import { Stat } from './components/Stat';
 import { LogoFace } from './components/LogoFace';
 import { ToDoItem } from './components/ToDoItem';
 import { EmptyState } from './components/EmptyState';
 import { InputBar } from './components/InputBar';
+import { InputBarMobile } from './components/InputBarMobile';
 import { ConditionalRender } from './components/ConditionalRender';
-import { useRef } from 'react';
 
 function App() {
   const todoItemsListWrapper = useRef(null);
+  const isW450 = useMediaQuery({
+    query: '(max-width: 450px)'
+  });
   const {
     toDoItemsList,
     statsData,
@@ -68,7 +74,10 @@ function App() {
       <main className={s.mainWrapper}>
         <h1 className={s.pageMainHeading}>Ignido - to-do app</h1>
         <div className={s.mainContentWrapper}>
-          <InputBar />
+          {!isW450
+            ? <InputBar />
+            : createPortal(<InputBarMobile />, document.body)
+          }
           <ConditionalRender.Provider condition={toDoItemsList.length > 0}>
             <ConditionalRender.Slot>
               <div
@@ -77,22 +86,25 @@ function App() {
                 data-dragging-within={draggingItem ? "true" : "false"}
                 ref={todoItemsListWrapper}
               >
+                {focusedItem && <div className={s.tasksListWrapperOverlay} />}
                 <Reorder.Group
                   initial={false} axis="y"
                   values={toDoItemsList}
                   onReorder={updateToDoItemsList}
                 >
-                  {
-                    toDoItemsList.map((item) => (
-                      <ToDoItem
-                        key={item.id}
-                        data={item}
-                        isFocused={focusedItem === item.id}
-                        isDragging={draggingItem === item.id}
-                        listWrapperContraints={todoItemsListWrapper}
-                      />
-                    ))
-                  }
+                  <AnimatePresence initial={false}>
+                    {
+                      toDoItemsList.map((item) => (
+                        <ToDoItem
+                          key={item.id}
+                          data={item}
+                          isFocused={focusedItem === item.id}
+                          isDragging={draggingItem === item.id}
+                          listWrapperContraints={todoItemsListWrapper}
+                        />
+                      ))
+                    }
+                  </AnimatePresence>
                 </Reorder.Group>
               </div>
             </ConditionalRender.Slot>

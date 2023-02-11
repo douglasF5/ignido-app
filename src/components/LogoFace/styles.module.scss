@@ -1,0 +1,7 @@
+@use '../../styles/utils.module' as u;
+
+.img {
+  @include u.useBreakpoint(450) {
+    width: 24px !important;
+  }
+}

@@ -103,12 +103,16 @@ export function ToDoItem({ data, isFocused, isDragging, listWrapperContraints }:
 
   return (
     <Reorder.Item
+      initial={{ opacity: 0, scale: 0.95, height: 0 }}
+      animate={{ opacity: 1, scale: 1, height: "auto" }}
+      exit={{ opacity: 0, scale: 0.95, height: 0 }}
       value={data}
       id={data.id}
       dragListener={false}
       dragControls={dragControls}
       dragConstraints={listWrapperContraints}
       dragElastic={0.1}
+      className={s.itemWrapper}
     >
       <div
         className={cs([

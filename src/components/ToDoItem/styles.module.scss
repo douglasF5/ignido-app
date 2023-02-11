@@ -3,6 +3,10 @@
 @use '../../styles/colors.module' as c;
 @use '../../styles/utils.module' as u;
 
+[data-focus-within="true"][data-dragging-within="false"] .itemWrapper>.container:not(.isFocused) {
+  opacity: 0.5;
+}
+
 .container {
   @include l.useFlex($direction: row, $align: center);
 
@@ -10,7 +14,7 @@
   gap: 12px;
   border-bottom: 1px solid var(--c-outline);
   background-color: var(--c-background);
-  z-index: 1;
+  z-index: 3;
 
   &:not(.isHeading) {
     padding-left: 12px;
@@ -30,7 +34,6 @@
   &.isFocused {
     position: relative;
     background-color: c.composeLayeredColor("background", "primary", 0);
-    opacity: 1;
     z-index: 2;
   }
 
@@ -49,6 +52,10 @@
   gap: 4px;
   border-bottom: 1px solid var(--c-primary);
   color: var(--c-primary);
+
+  @include u.useBreakpoint(450) {
+    padding-left: 12px;
+  }
 }
 
 .headingTitle {
@@ -185,6 +192,11 @@
   & img {
     pointer-events: none;
   }
+
+  @include u.useBreakpoint(450) {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .actionsBarWrapper {
@@ -193,4 +205,8 @@
   top: 0;
   transform: translateY(-105%);
   z-index: 5;
+
+  @include u.useBreakpoint(450) {
+    right: 8px;
+  }
 }

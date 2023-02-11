@@ -1,10 +1,9 @@
 import { useToDoContent } from '../../TodoContext';
-import { motion, AnimatePresence } from 'framer-motion';
 import { FormEvent, useState } from 'react';
 import { useComposableStyles } from '../../hooks/useComposableStyles';
 import s from './styles.module.scss';
 
-export function InputBar() {
+export function InputBarMobile() {
   const [inputContent, setInputContent] = useState('');
   const [inputHasFocus, setInputHasFocus] = useState(false);
   const { addNewToDoItem } = useToDoContent();
@@ -20,10 +19,9 @@ export function InputBar() {
     <div
       className={cs(["inputBarWrapper", inputHasFocus ? "hasFocusWithin" : null])}
     >
-      <motion.form
+      <form
         className={s.addNewTaskContainer}
         onSubmit={handleSubmit}
-        animate={{ borderRadius: inputHasFocus ? 0 : "4px" }}
       >
         <input
           className={s.inputFieldAddtask}
@@ -35,33 +33,12 @@ export function InputBar() {
           onBlur={() => setInputHasFocus(false)}
         />
         <button
-          disabled={inputContent === ''}
           className={s.buttonAddTask}
           type="submit"
         >
           Add
         </button>
-      </motion.form>
-      <AnimatePresence initial={false}>
-        {inputHasFocus && (
-          <motion.div
-            initial={{ translateY: "-100%" }}
-            animate={{ translateY: "0%" }}
-            exit={{ translateY: "-100%" }}
-            transition={{ duration: 0.25, ease: "easeIn" }}
-            className={s.infoSectionContainer}
-          >
-            <div className={s.tipWrapper}>
-              <span className={s.signWrapper}><span className={s.sign}>#</span></span>
-              <p className={s.label}>To add a heading</p>
-            </div>
-            <div className={s.tipWrapper}>
-              <span className={s.signWrapper}><span className={cs(["sign", "asterisk"])}>*</span></span>
-              <p className={s.label}>To add priority</p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </form>
     </div>
   );
 };

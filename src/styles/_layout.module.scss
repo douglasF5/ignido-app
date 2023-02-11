@@ -1,5 +1,15 @@
+@use './utils.module' as u;
+
 @mixin useSectionContainer($padding: 0 48px) {
   padding: 0 48px;
+
+  @include u.useBreakpoint(600) {
+    padding: 0 24px;
+  }
+
+  @include u.useBreakpoint(450) {
+    padding: 0 16px;
+  }
 }
 
 @mixin useContentContainer($margin: 0 auto, $maxWidth: 664px) {

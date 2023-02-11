@@ -23,7 +23,7 @@ export function LogoFace({ faceName }: LogoFaceProps) {
 
   return (
     <div>
-      <img src={faces[faceName].resourcePath} alt={faces[faceName].altText} />
+      <img className={s.img} src={faces[faceName].resourcePath} alt={faces[faceName].altText} />
     </div>
   );
 };
