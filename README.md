@@ -9,12 +9,6 @@
 
 <br>
 
-## About
-
-Project description...
-
-<br>
-
 ### Tools used
 
 `Typescript` `ReactJS` `Vite` `react-responsive` `Framer Motion` `Radix UI` `SASS`
