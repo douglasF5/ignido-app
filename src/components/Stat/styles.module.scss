@@ -33,8 +33,9 @@
 
 .dataWrapper {
   position: relative;
-  overflow: hidden;
+  overflow-y: hidden;
   width: 100%;
+  min-width: 42px;
   height: 54px;
 }
 

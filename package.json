@@ -10,6 +10,7 @@
     "gc": "node ./src/component-gen/index.js $1"
   },
   "dependencies": {
+    "@mui/base": "^5.0.0-alpha.117",
     "@radix-ui/react-checkbox": "^1.0.1",
     "@radix-ui/react-menubar": "^1.0.0",
     "@radix-ui/react-tooltip": "^1.0.3",

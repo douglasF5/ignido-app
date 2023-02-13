@@ -112,7 +112,7 @@
   transform: translateY(-32px);
 
   @include u.useBreakpoint(450) {
-    padding: 0 0 80px 0;
+    padding: 0 0 64px 0;
   }
 }
 
@@ -132,6 +132,11 @@
 
 .tasksListWrapper {
   background-color: c.composeLayeredColor("background", "on-surface", 1);
+  min-height: 56px;
+
+  &[data-focus-within="true"] {
+    z-index: 4;
+  }
 }
 
 .tasksListWrapper[data-focus-within="true"][data-dragging-within="false"] {

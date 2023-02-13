@@ -47,14 +47,14 @@ const toDoItemsData: ToDoItemData[] = [
   {
     id: "1",
     type: "task",
-    title: "Walk the dog",
+    title: "Create a new task using the radioactive green input above",
     isChecked: false,
     isPriority: false
   },
   {
     id: "2",
     type: "task",
-    title: "Dinner with mom",
+    title: "Create a heading by typing a # in front of the to-do's title",
     isChecked: false,
     isPriority: false
   },
@@ -68,7 +68,14 @@ const toDoItemsData: ToDoItemData[] = [
   {
     id: "4",
     type: "task",
-    title: "Integer urna interdum massa libero auctor neque turpis turpis semper. Duis vel sed fames integer. This is the content.",
+    title: "Use the handles on every to-do item to drag and reorder the list",
+    isChecked: false,
+    isPriority: false
+  },
+  {
+    id: "5",
+    type: "task",
+    title: "Complete all to-dos to make it rain confetti 🎉",
     isChecked: false,
     isPriority: false
   },
@@ -80,14 +87,15 @@ export const ToDoContext = createContext({} as ToDoContextProvider);
 // CONTEXT PROVIDING
 export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
   const [toDoItemsList, setToDoItemsList] = useState(
-    JSON.parse(getDataFromLocalStorage()) as ToDoItemData[] || toDoItemsData);
+    getDataFromLocalStorage() || toDoItemsData);
   const [focusedItem, setFocusedItem] = useState<string | null>(null);
   const [draggingItem, setDraggingItem] = useState<string | null>(null);
   const [isConfettiRunning, setIsConfettiRunning] = useState(false);
 
   function getDataFromLocalStorage() {
-    const data = localStorage.getItem('ignido.appData');
-    return data ?? "";
+    const rawData = localStorage.getItem('ignido.appData');
+    const data = rawData ? JSON.parse(rawData) as ToDoItemData[] : "";
+    return data;
   }
 
   function calculateTasksCount(array: ToDoItemData[], property: keyof ToDoItemData, value: string | boolean) {
@@ -203,6 +211,21 @@ export function ToDoContextProvider({ children }: ToDoContextProviderProps) {
       if (item.id === id) {
         if (item.type === "task" && shouldUpdateTasksCount) {
           tasksCountIncrement = updateObject.isChecked ? 1 : -1;
+        }
+
+        if ("title" in updateObject) {
+          const title = updateObject.title as string;
+          const isHeading = title[0] === "#";
+          const hasPriority = title[0] === "*";
+          const trimmedTitle = isHeading || hasPriority ? title.trim().slice(1) : title.trim();
+          const newType: ToDoType = isHeading ? "heading" : item.type;
+
+          return {
+            ...item,
+            ...updateObject,
+            title: trimmedTitle,
+            type: newType
+          };
         }
 
         return {

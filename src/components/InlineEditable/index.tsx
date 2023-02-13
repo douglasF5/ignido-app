@@ -1,4 +1,5 @@
 import s from './styles.module.scss';
+import TextareaAutosize from '@mui/base/TextareaAutosize';
 import { FormEvent, ForwardedRef } from 'react';
 import { forwardRef } from 'react';
 
@@ -20,21 +21,21 @@ export const InlineEditable = forwardRef(({
   placeholder,
   setValue,
   handleClick
-}: InlineEditableProps, ref: ForwardedRef<HTMLInputElement>) => {
-  const handleChange = (event: FormEvent<HTMLInputElement>) => {
-    const target = event.target as HTMLInputElement;
+}: InlineEditableProps, ref: ForwardedRef<HTMLTextAreaElement>) => {
+
+  const handleChange = (event: FormEvent<HTMLTextAreaElement>) => {
+    const target = event.target as HTMLTextAreaElement;
     setValue(target.value);
   };
 
   return (
-    <input
+    <TextareaAutosize
       autoCapitalize='false'
       autoComplete='false'
       autoCorrect='false'
       ref={ref}
       readOnly={!isActive}
       className={[s.input, className].join(" ")}
-      type="text"
       aria-label={fieldName}
       name={fieldName}
       value={value}

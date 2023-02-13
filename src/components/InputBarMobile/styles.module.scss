@@ -20,7 +20,7 @@
 .addNewTaskContainer {
   @include l.useFlex($direction: row, $justify: space-between);
   position: relative;
-  padding-right: 12px;
+  padding-right: 8px;
   gap: 12px;
   background-color: var(--c-primary);
   color: var(--c-on-primary);
@@ -52,7 +52,7 @@
 .buttonAddTask {
   @include t.useTitle($style: normal);
 
-  padding: u.toRem(8) u.toRem(16);
+  padding: u.toRem(8) u.toRem(12);
   border: none;
   border-radius: 4px;
   background-color: var(--c-surface);
@@ -87,6 +87,45 @@
   &::selection {
     color: var(--c-primary);
     background-color: var(--c-surface);
+  }
+}
+
+.buttonToggleInput {
+  @include t.useTitle($style: normal);
+
+  padding: u.toRem(8) u.toRem(12);
+  position: fixed;
+  bottom: 8px;
+  right: 8px;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--c-primary);
+  color: var(--c-on-primary);
+  cursor: pointer;
+  box-shadow: 0px 5px 4px rgba(c.getColor('background'), 0.32);
+  z-index: 5;
+  transition-property: background-color, box-shadow;
+  transition-duration: 100ms;
+  transition-timing-function: ease;
+
+  &:disabled {
+    background-color: rgba(c.getColor('on-primary'), 0.12);
+    color: rgba(c.getColor('on-primary'), 0.38);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  &:not([disabled]):active {
+    box-shadow: 0px 0px 4px rgba(c.getColor('background'), 0.32);
+  }
+
+  &:focus-visible {
+    outline: 1px solid var(--c-primary);
+  }
+
+  &::selection {
+    color: var(--c-primary);
+    background-color: var(--c-on-primary);
   }
 }
 

@@ -46,6 +46,10 @@
     border: 1px solid var(--c-outline);
     z-index: 5;
   }
+
+  @include u.useBreakpoint(450) {
+    gap: 8px;
+  }
 }
 
 .isHeading {
@@ -194,7 +198,7 @@
   }
 
   @include u.useBreakpoint(450) {
-    opacity: 1;
+    opacity: 0.6;
     transform: translateX(0);
   }
 }
