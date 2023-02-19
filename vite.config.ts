@@ -3,6 +3,9 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/ignido-app/',
   plugins: [react()],
-  base: '/ignido-app/'
+  build: {
+    assetsDir: './'
+  }
 })

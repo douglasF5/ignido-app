@@ -120,7 +120,7 @@ export function ActionsBar({ itemId, isHeading, isPriority, onDismiss }: Actions
               description='Delete item'
             >
               <div>
-                <img src="/delete.svg" alt="Delete" />
+                <img src="./delete.svg" alt="Delete" />
                 <span className={s.actionLabel}>Delete</span>
               </div>
             </Tooltip>
