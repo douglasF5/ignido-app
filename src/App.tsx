@@ -62,10 +62,10 @@ function App() {
             <Stat label='Done' data={statsData.completeTasks} />
             <Stat label='Tasks' data={statsData.totalTasksCount} />
             <a className={s.profileContainer} href="https://github.com/douglasF5" title="@douglasF5 on GitHub" target="_blank" rel="noreferrer">
-              <img className={s.profilePic} src="/douglas-ferreira-profile-pic.png" alt="@douglasF5" />
+              <img className={s.profilePic} src="./douglas-ferreira-profile-pic.png" alt="@douglasF5" />
               <div className={s.profileLabelWrapper}>
                 <h3 className={s.profileLabel}>Me</h3>
-                <img src="/arrow-outward.svg" alt="@douglasF5" />
+                <img src="./arrow-outward.svg" alt="@douglasF5" />
               </div>
             </a>
           </div>

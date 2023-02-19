@@ -64,7 +64,7 @@ export function ActionsBar({ itemId, isHeading, isPriority, onDismiss }: Actions
               description='Enter'
             >
               <div>
-                <img src="/check-green.svg" alt="Close" />
+                <img src="./check-green.svg" alt="Close" />
                 <span className={s.actionLabel}>Close</span>
               </div>
             </Tooltip>
@@ -83,7 +83,7 @@ export function ActionsBar({ itemId, isHeading, isPriority, onDismiss }: Actions
                 description='Mark as priority'
               >
                 <div>
-                  <img src={isPriority ? "/flag-fill.svg" : "/flag-outline.svg"} alt="Priority" />
+                  <img src={isPriority ? "./flag-fill.svg" : "./flag-outline.svg"} alt="Priority" />
                   <span className={s.actionLabel}>Priority</span>
                 </div>
               </Tooltip>
@@ -102,7 +102,7 @@ export function ActionsBar({ itemId, isHeading, isPriority, onDismiss }: Actions
               description='Duplicate item'
             >
               <div>
-                <img src="/content-copy.svg" alt="Duplicate" />
+                <img src="./content-copy.svg" alt="Duplicate" />
                 <span className={s.actionLabel}>Duplicate</span>
               </div>
             </Tooltip>

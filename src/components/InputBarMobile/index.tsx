@@ -42,7 +42,7 @@ export function InputBarMobile() {
             animate={{ backgroundColor: "#67FF76" }}
             exit={{ backgroundColor: "#20241" }}
           >
-            <img src="/add.svg" alt="Toggle input" />
+            <img src="./add.svg" alt="Toggle input" />
           </motion.button>
         )}
       </AnimatePresence>
@@ -72,7 +72,7 @@ export function InputBarMobile() {
               onClick={handleSubmit}
             >
               <motion.img
-                src="/arrow-upward.svg"
+                src="./arrow-upward.svg"
                 alt="Submit input"
                 initial={{
                   rotateZ: "180deg"

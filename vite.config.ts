@@ -6,6 +6,7 @@ export default defineConfig({
   base: '/ignido-app/',
   plugins: [react()],
   build: {
+    outDir: './dist/ignido-app/',
     assetsDir: './'
   }
 })

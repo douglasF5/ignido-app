@@ -12,11 +12,11 @@ interface Faces {
 export function LogoFace({ faceName }: LogoFaceProps) {
   const faces: Faces = {
     bolt: {
-      resourcePath: '/electric-bolt.svg',
+      resourcePath: './electric-bolt.svg',
       altText: 'Let\'s get down to work!'
     },
     coffee: {
-      resourcePath: '/coffee.svg',
+      resourcePath: './coffee.svg',
       altText: 'Well done!'
     },
   };

@@ -137,7 +137,7 @@ export function ToDoItem({ data, isFocused, isDragging, listWrapperContraints }:
             >
               <Checkbox.Indicator className={s.checkBoxIndicator}>
                 <img
-                  src="/check.svg"
+                  src="./check.svg"
                   alt="Check"
                 />
               </Checkbox.Indicator>
@@ -145,7 +145,7 @@ export function ToDoItem({ data, isFocused, isDragging, listWrapperContraints }:
             <label className={s.checkboxLabel} htmlFor={data.id}>{data.title}</label>
           </div>
         )}
-        {data.isPriority && <img className={s.priorityIndicator} src="/flag-fill.svg" alt="Priority" />}
+        {data.isPriority && <img className={s.priorityIndicator} src="./flag-fill.svg" alt="Priority" />}
         <InlineEditable
           isActive={isFocused}
           value={editableItemTitle}
@@ -165,7 +165,7 @@ export function ToDoItem({ data, isFocused, isDragging, listWrapperContraints }:
             onPointerDown={(e) => handleDrag(e)}
             onPointerUp={() => setDraggingItem(null)}
           >
-            <img src="/drag-indicator.svg" alt="Drag indicator" />
+            <img src="./drag-indicator.svg" alt="Drag indicator" />
           </div>
         </Tooltip>
         <AnimatePresence initial={false}>
